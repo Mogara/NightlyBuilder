@@ -8,7 +8,7 @@ class NBStateQMaking : public NBState
     Q_OBJECT
 
 public:
-    explicit NBStatePulling(QObject *parent = 0);
+    explicit NBStateQMaking(QObject *parent = 0);
     ~NBStateQMaking();
 };
 
