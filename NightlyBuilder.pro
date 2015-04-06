@@ -15,8 +15,24 @@ TEMPLATE = app
 SOURCES += main.cpp\
         maindialog.cpp \
     rundialog.cpp \
-    statemanager.cpp
+    statemanager.cpp \
+    states/statepulling.cpp \
+    states/stategeneratingbotversioncpp.cpp \
+    states/state.cpp \
+    states/stateqmaking.cpp \
+    states/statemaking.cpp \
+    states/statedeploying.cpp \
+    states/statepackaging.cpp \
+    states/stateuploading.cpp
 
 HEADERS  += maindialog.h \
     rundialog.h \
-    statemanager.h
+    statemanager.h \
+    states/statepulling.h \
+    states/stategeneratingbotversioncpp.h \
+    states/state.h \
+    states/stateqmaking.h \
+    states/statemaking.h \
+    states/statedeploying.h \
+    states/statepackaging.h \
+    states/stateuploading.h

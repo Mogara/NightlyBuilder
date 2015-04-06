@@ -3,6 +3,11 @@
 
 #include <QObject>
 
+
+// A State Manager running in main thread.
+// All the states are also running in main thread, but they work with a process or an another thread.
+
+
 class NBStateManager : public QObject
 {
     Q_OBJECT
