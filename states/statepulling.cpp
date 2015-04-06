@@ -10,3 +10,8 @@ NBStatePulling::~NBStatePulling()
 
 }
 
+
+void NBStatePulling::run()
+{
+
+}

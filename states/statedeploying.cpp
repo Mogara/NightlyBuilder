@@ -10,3 +10,7 @@ NBStateDeploying::~NBStateDeploying()
 
 }
 
+void NBStateDeploying::run()
+{
+
+}

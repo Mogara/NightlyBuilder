@@ -10,6 +10,8 @@ public:
     explicit NBStateUploading(QObject *parent = 0);
     ~NBStateUploading();
 
+    void run();
+
 signals:
 
 public slots:

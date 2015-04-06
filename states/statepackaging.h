@@ -10,6 +10,8 @@ public:
     explicit NBStatePackaging(QObject *parent = 0);
     ~NBStatePackaging();
 
+    void run();
+
 signals:
 
 public slots:

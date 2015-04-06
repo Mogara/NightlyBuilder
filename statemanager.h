@@ -2,6 +2,9 @@
 #define NBSTATEMANAGER_H
 
 #include <QObject>
+#include <QMap>
+
+class NBState;
 
 
 // A State Manager running in main thread.
@@ -12,7 +15,8 @@ class NBStateManager : public QObject
 {
     Q_OBJECT
 
-    enum States {
+public:
+    enum State {
         NonState,                  // State with nothing to do, it is usually the begining of the whole process.
         Pulling,                   // State with a running process "git pull" pulling the newest code from Github
         GeneratingBotVersionCpp,   // State with a thread that generating bot_version.cpp changing the version of the whole program
@@ -26,13 +30,22 @@ class NBStateManager : public QObject
         Error = -1                 // State with error occurred.
     };
 
-public:
     explicit NBStateManager(QObject *parent = 0);
     ~NBStateManager();
 
 signals:
+    void finished();
+    void error();
 
 public slots:
+    void start();
+
+    void oneFinished();
+    void oneError();
+
+private:
+    QMap<State, NBState *> m_stateMap;
+    State m_currentState;
 };
 
 #endif // NBSTATEMANAGER_H

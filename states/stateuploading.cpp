@@ -10,3 +10,8 @@ NBStateUploading::~NBStateUploading()
 
 }
 
+
+void NBStateUploading::run()
+{
+
+}

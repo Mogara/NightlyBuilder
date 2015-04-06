@@ -10,3 +10,8 @@ NBStateGeneratingBotVersionCpp::~NBStateGeneratingBotVersionCpp()
 
 }
 
+
+void NBStateGeneratingBotVersionCpp::run()
+{
+
+}

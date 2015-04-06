@@ -10,3 +10,14 @@ NBState::~NBState()
 
 }
 
+void NBState::start()
+{
+    m_retryTimes = 0;
+    run();
+}
+
+void NBState::retry()
+{
+    ++m_retryTimes;
+    run();
+}

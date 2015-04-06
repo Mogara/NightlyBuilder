@@ -10,3 +10,8 @@ NBStatePackaging::~NBStatePackaging()
 
 }
 
+
+void NBStatePackaging::run()
+{
+
+}

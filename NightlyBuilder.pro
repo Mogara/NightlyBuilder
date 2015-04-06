@@ -4,9 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+CONFIG += c++11
 
 TARGET = NightlyBuilder
 TEMPLATE = app
@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     states/statedeploying.cpp \
     states/statepackaging.cpp \
     states/stateuploading.cpp \
-    globalconfig.cpp
+    globalconfig.cpp \
+    states/statefactory.cpp
 
 HEADERS  += maindialog.h \
     rundialog.h \
@@ -37,4 +38,10 @@ HEADERS  += maindialog.h \
     states/statedeploying.h \
     states/statepackaging.h \
     states/stateuploading.h \
-    globalconfig.h
+    globalconfig.h \
+    states/statefactory.h
+
+INCLUDEPATH += .
+INCLUDEPATH += ./states
+
+

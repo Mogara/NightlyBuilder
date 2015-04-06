@@ -10,6 +10,8 @@ public:
     explicit NBStateMaking(QObject *parent = 0);
     ~NBStateMaking();
 
+    void run();
+
 signals:
 
 public slots:

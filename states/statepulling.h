@@ -10,6 +10,8 @@ public:
     explicit NBStatePulling(QObject *parent = 0);
     ~NBStatePulling();
 
+    void run();
+
 signals:
 
 public slots:

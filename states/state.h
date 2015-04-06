@@ -10,9 +10,10 @@ public:
     explicit NBState(QObject *parent = 0);
     ~NBState();
 
-    virtual void run() = 0;
-
     inline int retryTimes() const { return m_retryTimes; }
+
+protected:
+    virtual void run() = 0;
 
 signals:
     void finished();

@@ -10,3 +10,8 @@ NBStateQMaking::~NBStateQMaking()
 {
 
 }
+
+void NBStateQMaking::run()
+{
+
+}

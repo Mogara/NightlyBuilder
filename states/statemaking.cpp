@@ -10,3 +10,8 @@ NBStateMaking::~NBStateMaking()
 
 }
 
+
+void NBStateMaking::run()
+{
+
+}

@@ -10,6 +10,8 @@ public:
     explicit NBStateGeneratingBotVersionCpp(QObject *parent = 0);
     ~NBStateGeneratingBotVersionCpp();
 
+    void run();
+
 signals:
 
 public slots:
