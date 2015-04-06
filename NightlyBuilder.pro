@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     states/statemaking.cpp \
     states/statedeploying.cpp \
     states/statepackaging.cpp \
-    states/stateuploading.cpp
+    states/stateuploading.cpp \
+    globalconfig.cpp
 
 HEADERS  += maindialog.h \
     rundialog.h \
@@ -35,4 +36,5 @@ HEADERS  += maindialog.h \
     states/statemaking.h \
     states/statedeploying.h \
     states/statepackaging.h \
-    states/stateuploading.h
+    states/stateuploading.h \
+    globalconfig.h
