@@ -45,7 +45,7 @@ void NBStatePackaging::run()
 
     m_7z = new QProcess;
     m_7z->setProgram("7z");
-    m_7z->setArguments(QStringList() << "????"); // todo:global setting // todo:set the arguments of 7z
+    m_7z->setArguments(QStringList() << "a" << "7zname.7z" << "foldername"); // todo:global setting
 
     connect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStatePackaging::processFinished);
     connect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStatePackaging::processError);
