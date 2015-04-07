@@ -3,7 +3,7 @@
 #include <QProcess>
 #include <QTimer>
 
-NBStatePulling::NBStatePulling(QObject *parent) : NBState(parent), m_git(NULL), m_waitTimer(NULL), m_running(false)
+NBStatePulling::NBStatePulling(QObject *parent) : NBState(parent), m_git(NULL), m_waitTimer(NULL), m_running(false), m_isError(false)
 {
 
 }
@@ -16,10 +16,13 @@ NBStatePulling::~NBStatePulling()
 
 void NBStatePulling::run()
 {
-    if (m_running)
+    if (m_running) {
+        emit error();
         return;
+    }
 
     m_running = true;
+    m_isError = false;
 
     if (m_waitTimer != NULL) {
         delete m_waitTimer;
@@ -32,7 +35,8 @@ void NBStatePulling::run()
 
         } else {
             // log
-            emit error();
+            m_isError = true;
+            emit fatal();
             return;
         }
         delete m_git;
@@ -46,12 +50,19 @@ void NBStatePulling::run()
     connect(m_git, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStatePulling::processFinished);
     connect(m_git, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStatePulling::processError);
 
+    // start timer before the process start
+
+    m_waitTimer = new QTimer();
+    m_waitTimer->setSingleShot(true);
+    m_waitTimer->setInterval(3600000);
+    connect(m_waitTimer, &QTimer::timeout, this, &NBStatePulling::timeout);
+
     m_git->start();
 }
 
 void NBStatePulling::processError(QProcess::ProcessError)  // designed to handle error, temporily no effect
 {
-
+    m_isError = true;
 }
 
 void NBStatePulling::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -60,7 +71,8 @@ void NBStatePulling::processFinished(int exitCode, QProcess::ExitStatus exitStat
 
     if (p == NULL) {
         // log
-        emit error();
+        m_isError = true;
+        emit fatal();
         return;
     }
 
@@ -68,6 +80,8 @@ void NBStatePulling::processFinished(int exitCode, QProcess::ExitStatus exitStat
     if (exitStatus != QProcess::NormalExit || exitCode != 0) {
         QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
         Q_UNUSED(stdErr);
+        m_isError = true;
+        m_running = false;
         //log
         emit error();
         return;
@@ -82,5 +96,17 @@ void NBStatePulling::processFinished(int exitCode, QProcess::ExitStatus exitStat
 
     m_running = false;
 
-    emit finished();
+    if (!m_isError)
+        emit finished();
+}
+
+void NBStatePulling::timeout()
+{
+    m_isError = true;
+    //m_running = false;
+
+    if (m_git->state() != QProcess::NotRunning)
+        m_git->kill();
+
+    emit error();
 }

@@ -18,6 +18,7 @@ protected:
 signals:
     void finished();
     void error();
+    void fatal();
 
 private:
     int m_retryTimes;
