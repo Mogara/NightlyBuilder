@@ -3,9 +3,17 @@
 #include "state.h"
 
 
-NBStateManager::State operator++(NBStateManager::State &arg) {
+NBStateManager::State operator++(NBStateManager::State &arg)
+{
     arg = static_cast<NBStateManager::State>(static_cast<int>(arg) + 1);
     return arg;
+}
+
+NBStateManager::State operator++(NBStateManager::State &arg, int /*rightOperatorHandler*/)
+{
+    NBStateManager::State s = arg;
+    arg = static_cast<NBStateManager::State>(static_cast<int>(arg) + 1);
+    return s;
 }
 
 NBStateManager::NBStateManager(QObject *parent) : QObject(parent), m_currentState(NonState)

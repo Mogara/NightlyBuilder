@@ -48,4 +48,8 @@ private:
     State m_currentState;
 };
 
+NBStateManager::State operator++(NBStateManager::State &arg);
+
+NBStateManager::State operator++(NBStateManager::State &arg, int);
+
 #endif // NBSTATEMANAGER_H
