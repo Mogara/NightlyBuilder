@@ -1,7 +1,9 @@
 #include "statepulling.h"
 
-#include <QProcess>
+
 #include <QTimer>
+
+
 
 NBStatePulling::NBStatePulling(QObject *parent) : NBState(parent), m_git(NULL), m_waitTimer(NULL), m_running(false), m_isError(false)
 {
