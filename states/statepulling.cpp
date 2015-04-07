@@ -30,7 +30,8 @@ void NBStatePulling::run()
     }
 
     if (m_git != NULL) {
-        m_git->kill();
+        if (m_git->state() != QProcess::NotRunning)
+            m_git->kill();
         if (m_git->state() == QProcess::NotRunning || m_git->waitForFinished()) {
 
         } else {
