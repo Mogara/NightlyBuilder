@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     states/statepackaging.cpp \
     states/stateuploading.cpp \
     globalconfig.cpp \
-    states/statefactory.cpp
+    states/statefactory.cpp \
+    deploy.cpp
 
 HEADERS  += maindialog.h \
     rundialog.h \
@@ -39,7 +40,8 @@ HEADERS  += maindialog.h \
     states/statepackaging.h \
     states/stateuploading.h \
     globalconfig.h \
-    states/statefactory.h
+    states/statefactory.h \
+    deploy.h
 
 INCLUDEPATH += .
 INCLUDEPATH += ./states
