@@ -68,25 +68,34 @@ void NBDeployThread::run()
 {
     QDir proj(GlobalConfig::ProjectPath);
     QFile dplyFile(proj.absoluteFilePath("bot.dply"));
-    dplyFile.open(QIODevice::ReadOnly);
+    try {
+        if (!dplyFile.open(QIODevice::ReadOnly))
+            throw 1;
 
-    proj.mkpath(GlobalConfig::DeployPath);
+        if (!proj.mkpath(GlobalConfig::DeployPath))
+            throw 2;
+    }
+    catch (int) {
+        // error handling
+        return;
+    }
+
     QDir dply(GlobalConfig::DeployPath);
 
     QStringList folderList, fileList, qtLibList, qtPlugList;
     QStringList *currentList = NULL;
 
     auto listGetter = [&](const QString &n) -> void {
-      if (n == "Folders")
-          currentList = &folderList;
-      else if (n == "Files")
-          currentList = &fileList;
-      else if (n == "Qt Libraries")
-          currentList = &qtLibList;
-      else if (n == "Qt Plugins")
-          currentList = &qtPlugList;
-      else
-          currentList = NULL;
+        if (n == "Folders")
+            currentList = &folderList;
+        else if (n == "Files")
+            currentList = &fileList;
+        else if (n == "Qt Libraries")
+            currentList = &qtLibList;
+        else if (n == "Qt Plugins")
+            currentList = &qtPlugList;
+        else
+            currentList = NULL;
     };
 
     while (dplyFile.canReadLine()) {
@@ -99,17 +108,20 @@ void NBDeployThread::run()
             (*currentList) << l;
     }
 
+    // global result
+    bool ok = true;
+
     // Step 1: copy the exe file
     QDir buld(GlobalConfig::BuildPath);
-    buld.cd("release");
+    ok &= buld.cd("release");
     if (QFile::exists(buld.absoluteFilePath("QSanguosha.exe")))
-        QFile::copy(buld.absoluteFilePath("QSanguosha.exe"), dply.absoluteFilePath("QSanguosha.exe"));
+        ok &= QFile::copy(buld.absoluteFilePath("QSanguosha.exe"), dply.absoluteFilePath("QSanguosha.exe"));
 
     // Step 2: copy the folders from ProjectPath to DeployPath
     foreach (const QString &f, folderList) {
         QString oldPath = proj.absoluteFilePath(f);
         QString newPath = dply.absoluteFilePath(f);
-        copyFolder(oldPath, newPath);
+        ok &= copyFolder(oldPath, newPath);
     }
 
     // Step 3: copy the files from ProjectPath to DeployPath
@@ -126,13 +138,33 @@ void NBDeployThread::run()
         QString oldPath = proj.absoluteFilePath(oldFileName);
         QString newPath = dply.absoluteFilePath(newFileName);
 
-        QFile::copy(oldPath, newPath);
+        ok &= QFile::copy(oldPath, newPath);
     }
 
     // Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath
-    // todo
+    QDir qt(GlobalConfig::QtPath);
+    ok &= qt.cd("bin");
+    foreach (const QString &f, qtLibList) {
+        QString oldPath = qt.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        ok &= QFile::copy(oldPath, newPath);
+    }
 
     // Step 5: copy the Qt plugins to DeployPath
     // reminder: Remove the debug version of plugins
-    // todo
+    qt = QDir(GlobalConfig::QtPath);
+    ok &= qt.cd("plugins");
+    foreach (const QString &f, qtPlugList) {
+        QString oldPath = qt.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        ok &= copyFolder(oldPath, newPath);
+
+        QDir newDir(newPath);
+        ok &= removeDebugDlls(newDir);
+    }
+
+    if (!ok)
+        //error handling 2
+        return;
+
 }
