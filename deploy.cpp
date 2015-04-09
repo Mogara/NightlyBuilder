@@ -1,4 +1,5 @@
 #include "deploy.h"
+#include "globalconfig.h"
 
 #include <QDir>
 
@@ -43,12 +44,16 @@ namespace {
     bool removeDebugDlls(QDir &dir)
     {
         QStringList to_remove;
-        foreach (const QString &filename, dir.entryList("*d.dll", QDir::files)) {
+        foreach (const QString &filename, dir.entryList(QStringList("*d.dll"), QDir::Files)) {
             QString _filename = filename;
             _filename = _filename.replace("d.dll", ".dll");
             if (dir.exists(_filename))
                 to_remove << filename;
         }
+
+        // for VS version of Qt
+        foreach (const QString &filename, dir.entryList(QStringList("*.pdb"), QDir::Files))
+            to_remove << filename;
 
         bool result = true;
         foreach (const QString &filename, to_remove)
@@ -61,5 +66,73 @@ namespace {
 
 void NBDeployThread::run()
 {
+    QDir proj(GlobalConfig::ProjectPath);
+    QFile dplyFile(proj.absoluteFilePath("bot.dply"));
+    dplyFile.open(QIODevice::ReadOnly);
 
+    proj.mkpath(GlobalConfig::DeployPath);
+    QDir dply(GlobalConfig::DeployPath);
+
+    QStringList folderList, fileList, qtLibList, qtPlugList;
+    QStringList *currentList = NULL;
+
+    auto listGetter = [&](const QString &n) -> void {
+      if (n == "Folders")
+          currentList = &folderList;
+      else if (n == "Files")
+          currentList = &fileList;
+      else if (n == "Qt Libraries")
+          currentList = &qtLibList;
+      else if (n == "Qt Plugins")
+          currentList = &qtPlugList;
+      else
+          currentList = NULL;
+    };
+
+    while (dplyFile.canReadLine()) {
+        QString l = QString::fromUtf8(dplyFile.readLine());
+        l = l.trimmed();
+        if (l.startsWith('<') && l.endsWith('>')) {
+            l = l.mid(1, l.length() - 2);
+            listGetter(l);
+        } else if (currentList != NULL)
+            (*currentList) << l;
+    }
+
+    // Step 1: copy the exe file
+    QDir buld(GlobalConfig::BuildPath);
+    buld.cd("release");
+    if (QFile::exists(buld.absoluteFilePath("QSanguosha.exe")))
+        QFile::copy(buld.absoluteFilePath("QSanguosha.exe"), dply.absoluteFilePath("QSanguosha.exe"));
+
+    // Step 2: copy the folders from ProjectPath to DeployPath
+    foreach (const QString &f, folderList) {
+        QString oldPath = proj.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        copyFolder(oldPath, newPath);
+    }
+
+    // Step 3: copy the files from ProjectPath to DeployPath
+    // reminder: there is some items that contains "->" substring in the folder list, so distinguish it
+    foreach (const QString &f, fileList) {
+        QString oldFileName = f;
+        QString newFileName = f;
+        if (f.contains("->")) {
+            QStringList l = f.split("->");
+            oldFileName = l.first().trimmed();
+            newFileName = l.last().trimmed();
+        }
+
+        QString oldPath = proj.absoluteFilePath(oldFileName);
+        QString newPath = dply.absoluteFilePath(newFileName);
+
+        QFile::copy(oldPath, newPath);
+    }
+
+    // Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath
+    // todo
+
+    // Step 5: copy the Qt plugins to DeployPath
+    // reminder: Remove the debug version of plugins
+    // todo
 }
