@@ -12,6 +12,8 @@ public:
 
     void run();
 
+    bool succeed;
+
 };
 
 #endif // NBDEPLOY_H

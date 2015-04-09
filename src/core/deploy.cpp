@@ -3,7 +3,7 @@
 
 #include <QDir>
 
-NBDeployThread::NBDeployThread() : QThread()
+NBDeployThread::NBDeployThread() : QThread(), succeed(true)
 {
 
 }
@@ -76,7 +76,7 @@ void NBDeployThread::run()
             throw 2;
     }
     catch (int) {
-        // error handling
+        succeed = false;
         return;
     }
 
@@ -164,7 +164,5 @@ void NBDeployThread::run()
     }
 
     if (!ok)
-        //error handling 2
-        return;
-
+        succeed = false;
 }
