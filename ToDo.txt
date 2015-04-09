@@ -1,16 +1,26 @@
 1、各State完善：
-	StatePulling：启动git pull，由于是bot，所以使用https连接。
-	StateGeneratingBotVersionCpp：使用线程，复制一份src/bot_version.cpb->src/bot_version.cpp，替换%date为当前日期
-	StateQMaking：启动QMake，注意使用ShadowBuild，文件夹名要包含日期，加入CONFIG+=buildbot
-	StateMaking，启动make，make -f ./MakeFile.release
-	StateDeploying：准备写一个文件专门用于deploy，这个文件指定将要拷贝的文件和文件夹的名称以及来源。
-	StatePackage：启动7z，进行压缩。注意要把pull和编译日志压入文件。
-	StateUploading：上传服务器。（暂时是相同电脑兼职制作FTP服务器，准备使用补助再弄一个服务器，要求是网络带宽大，至少10M）
+    StatePulling：启动git pull，由于是bot，所以使用https连接。
+        状态：基本完成，未测试，未集成GlobalConfig
+    StateGeneratingBotVersionCpp：使用线程，复制一份src/bot_version.cpb->src/bot_version.cpp，替换%date为当前日期
+        状态：更改为直接在主线程弄，基本完成，未测试
+    StateQMaking：启动QMake，注意使用ShadowBuild，文件夹名要包含日期，加入CONFIG+=buildbot
+        状态：基本完成，未测试，未集成GlobalConfig
+    StateMaking，启动make，make -f ./MakeFile.release
+        状态：基本完成，未测试，未集成GlobalConfig
+    StateDeploying：准备写一个文件专门用于deploy，这个文件指定将要拷贝的文件和文件夹的名称以及来源。
+        状态：未完成，只完成了3步，还有2步没有写完，未测试
+    StatePackage：启动7z，进行压缩。注意要把pull和编译日志压入文件。
+        状态：基本完成，未测试，未集成GlobalConfig，编译日志功能未实现
+    StateUploading：上传服务器。（暂时是相同电脑兼职制作FTP服务器，准备使用补助再弄一个服务器，要求是网络带宽大，至少10M）
+        状态：未着手。
 
-	全State：加入停止功能
+    全State：加入停止功能
+        状态：未着手。
+    全State：加入编译日志功能
+        状态：15/04/10新加的日程，未着手
 
 2、界面制作：
-	MainDialog：管理全局设置等。
-	RunDialog：管理运行进度和每夜版发布频率（也就是Timer）
+    MainDialog：管理全局设置等。
+    RunDialog：管理运行进度和每夜版发布频率（也就是Timer）
 
 3、暂时没了…………
