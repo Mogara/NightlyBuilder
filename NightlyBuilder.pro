@@ -12,38 +12,42 @@ TARGET = NightlyBuilder
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        maindialog.cpp \
-    rundialog.cpp \
-    statemanager.cpp \
-    states/statepulling.cpp \
-    states/stategeneratingbotversioncpp.cpp \
-    states/state.cpp \
-    states/stateqmaking.cpp \
-    states/statemaking.cpp \
-    states/statedeploying.cpp \
-    states/statepackaging.cpp \
-    states/stateuploading.cpp \
-    globalconfig.cpp \
-    states/statefactory.cpp \
-    deploy.cpp
+SOURCES += \
+    src/main.cpp \
+    src/dialogs/maindialog.cpp \
+    src/dialogs/rundialog.cpp \
+    src/core/statemanager.cpp \
+    src/states/statepulling.cpp \
+    src/states/stategeneratingbotversioncpp.cpp \
+    src/states/state.cpp \
+    src/states/stateqmaking.cpp \
+    src/states/statemaking.cpp \
+    src/states/statedeploying.cpp \
+    src/states/statepackaging.cpp \
+    src/states/stateuploading.cpp \
+    src/core/globalconfig.cpp \
+    src/states/statefactory.cpp \
+    src/core/deploy.cpp
 
-HEADERS  += maindialog.h \
-    rundialog.h \
-    statemanager.h \
-    states/statepulling.h \
-    states/stategeneratingbotversioncpp.h \
-    states/state.h \
-    states/stateqmaking.h \
-    states/statemaking.h \
-    states/statedeploying.h \
-    states/statepackaging.h \
-    states/stateuploading.h \
-    globalconfig.h \
-    states/statefactory.h \
-    deploy.h
+HEADERS  += \
+    src/dialogs/maindialog.h \
+    src/dialogs/rundialog.h \
+    src/core/statemanager.h \
+    src/states/statepulling.h \
+    src/states/stategeneratingbotversioncpp.h \
+    src/states/state.h \
+    src/states/stateqmaking.h \
+    src/states/statemaking.h \
+    src/states/statedeploying.h \
+    src/states/statepackaging.h \
+    src/states/stateuploading.h \
+    src/core/globalconfig.h \
+    src/states/statefactory.h \
+    src/core/deploy.h
 
-INCLUDEPATH += .
-INCLUDEPATH += ./states
+INCLUDEPATH += \
+    src/states \
+    src/dialogs \
+    src/core
 
 
