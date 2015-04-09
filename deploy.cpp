@@ -16,24 +16,28 @@ namespace {
 
     bool copyFolder(const QString &oldFolder, const QString &newFolder)
     {
-        if (!(QDir::exists(oldFolder) && !QDir::exists(newFolder))) // NG!!use another method to judge the dir exists
+        QDir newDir(newFolder);
+        QDir oldDir(oldFolder);
+
+        if (!(oldDir.exists() && !newDir.exists()))
             return false;
 
-        QDir newDir;
-        newDir.mkpath(newFolder);
-        newDir.cd(newFolder);
-
-        QDir oldDir(oldFolder);
+        if (!oldDir.mkpath(newFolder))
+            return false;
 
         foreach (const QString &subFolderName, oldDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {
             QString oldPath = oldDir.absoluteFilePath(subFolderName);
             QString newPath = newDir.absoluteFilePath(subFolderName);
-            copyFolder(oldPath, newPath);
+            if (!copyFolder(oldPath, newPath))
+                return false;
         }
 
-        foreach (const QString &fileName, oldDir.entryList(QDir::Files | QDir::NoDotAndDotDot))
-            QFile::copy(oldDir.absoluteFilePath(fileName), newDir.absoluteFilePath(fileName));
+        foreach (const QString &fileName, oldDir.entryList(QDir::Files | QDir::NoDotAndDotDot)) {
+            if (!QFile::copy(oldDir.absoluteFilePath(fileName), newDir.absoluteFilePath(fileName)))
+                return false;
+        }
 
+        return true;
     }
 
     bool removeDebugDlls(QDir &dir)
