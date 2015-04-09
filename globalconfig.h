@@ -8,6 +8,7 @@ namespace GlobalConfig {
     extern const QString DefaultDeployPath;
 
     extern QString ProjectPath;
+    extern QString BuildPath;
 }
 
 #endif // GLOBALCONFIG_H

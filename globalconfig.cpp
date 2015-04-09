@@ -7,4 +7,5 @@ namespace GlobalConfig {
     const QString DefaultDeployPath = "../%1-nightly-%2";
 
     QString ProjectPath = "";
+    QString BuildPath = "";
 }
