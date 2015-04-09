@@ -8,6 +8,6 @@ namespace GlobalConfig {
 
     QString ProjectPath = "";
     QString BuildPath = "";
-    QString QtInstallPath = "";
+    QString QtPath = "";
     QString DeployPath = "";
 }
