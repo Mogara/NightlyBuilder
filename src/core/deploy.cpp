@@ -4,7 +4,7 @@
 #include <QDate>
 #include <QDir>
 
-NBDeployThread::NBDeployThread() : QThread(), succeed(true)
+NBDeployThread::NBDeployThread() : succeed(true)
 {
 
 }

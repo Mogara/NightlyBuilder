@@ -11,6 +11,7 @@ namespace GlobalConfig {
     extern QString BuildPath;
     extern QString QtPath;
     extern QString DeployPath;
+    extern QString FtpPath;
 }
 
 #endif // GLOBALCONFIG_H

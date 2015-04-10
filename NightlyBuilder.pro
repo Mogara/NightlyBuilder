@@ -27,7 +27,8 @@ SOURCES += \
     src/states/stateuploading.cpp \
     src/core/globalconfig.cpp \
     src/states/statefactory.cpp \
-    src/core/deploy.cpp
+    src/core/deploy.cpp \
+    src/core/upload.cpp
 
 HEADERS  += \
     src/dialogs/maindialog.h \
@@ -43,7 +44,8 @@ HEADERS  += \
     src/states/stateuploading.h \
     src/core/globalconfig.h \
     src/states/statefactory.h \
-    src/core/deploy.h
+    src/core/deploy.h \
+    src/core/upload.h
 
 INCLUDEPATH += \
     src/states \

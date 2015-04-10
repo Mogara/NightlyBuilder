@@ -10,4 +10,5 @@ namespace GlobalConfig {
     QString BuildPath = "";
     QString QtPath = "";
     QString DeployPath = "";
+    QString FtpPath = "";
 }
