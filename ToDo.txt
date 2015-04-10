@@ -1,16 +1,16 @@
 1、各State完善：
     StatePulling：启动git pull，由于是bot，所以使用https连接。
-        状态0410：基本完成，未测试，未集成GlobalConfig
+        状态0410：基本完成，未测试
     StateGeneratingBotVersionCpp：使用线程，复制一份src/bot_version.cpb->src/bot_version.cpp，替换%date为当前日期
         状态0410：更改为直接在主线程弄，基本完成，未测试
     StateQMaking：启动QMake，注意使用ShadowBuild，文件夹名要包含日期，加入CONFIG+=buildbot
-        状态0410：基本完成，未测试，未集成GlobalConfig
+        状态0410：基本完成，未测试
     StateMaking，启动make，make -f ./MakeFile.release
-        状态0410：基本完成，未测试，未集成GlobalConfig
+        状态0410：基本完成，未测试
     StateDeploying：准备写一个文件专门用于deploy，这个文件指定将要拷贝的文件和文件夹的名称以及来源。
-        状态0410：基本完成，未测试，未集成GlobalConfig
+        状态0410：基本完成，未测试
     StatePackage：启动7z，进行压缩。注意要把pull和编译日志压入文件。
-        状态0410：基本完成，未测试，未集成GlobalConfig，编译日志功能未实现
+        状态0410：基本完成，未测试，编译日志功能未实现
     StateUploading：上传服务器。（暂时是相同电脑兼职制作FTP服务器，准备使用补助再弄一个服务器，要求是网络带宽大，至少10M）
         状态0410：未着手。
 
