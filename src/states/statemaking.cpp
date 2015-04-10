@@ -48,7 +48,7 @@ void NBStateMaking::run()
     m_make = new QProcess;
     m_make->setWorkingDirectory(GlobalConfig::BuildPath);
     m_make->setProgram("mingw32-make"); // consider using GlobalConfig instead
-    m_make->setArguments(QStringList() << "-fMakeFile.Release");
+    m_make->setArguments(QStringList() << "-fMakefile.Release");
 
     connect(m_make, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStateMaking::processFinished);
     connect(m_make, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStateMaking::processError);
