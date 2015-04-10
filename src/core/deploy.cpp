@@ -1,6 +1,7 @@
 #include "deploy.h"
 #include "globalconfig.h"
 
+#include <QDate>
 #include <QDir>
 
 NBDeployThread::NBDeployThread() : QThread(), succeed(true)
@@ -72,7 +73,7 @@ void NBDeployThread::run()
         if (!dplyFile.open(QIODevice::ReadOnly))
             throw 1;
 
-        if (!proj.mkpath(GlobalConfig::DeployPath))
+        if (!proj.mkpath(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd")))
             throw 2;
     }
     catch (int) {
@@ -80,7 +81,7 @@ void NBDeployThread::run()
         return;
     }
 
-    QDir dply(GlobalConfig::DeployPath);
+    QDir dply(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd"));
 
     QStringList folderList, fileList, qtLibList, qtPlugList;
     QStringList *currentList = NULL;
