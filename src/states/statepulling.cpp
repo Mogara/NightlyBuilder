@@ -1,8 +1,8 @@
 #include "statepulling.h"
+#include "globalconfig.h"
 
 
 #include <QTimer>
-
 
 
 NBStatePulling::NBStatePulling(QObject *parent) : NBState(parent), m_git(NULL), m_waitTimer(NULL), m_running(false), m_isError(false)
@@ -47,6 +47,7 @@ void NBStatePulling::run()
     }
 
     m_git = new QProcess;
+    m_git->setWorkingDirectory(GlobalConfig::ProjectPath);
     m_git->setProgram("git");
     m_git->setArguments(QStringList() << "pull");
 

@@ -1,6 +1,9 @@
 #include "statepackaging.h"
+#include "globalconfig.h"
 
 #include <QTimer>
+#include <QDir>
+#include <QDate>
 
 NBStatePackaging::NBStatePackaging(QObject *parent) : NBState(parent), m_7z(NULL), m_waitTimer(NULL), m_running(false), m_isError(false)
 {
@@ -44,8 +47,17 @@ void NBStatePackaging::run()
     }
 
     m_7z = new QProcess;
+
+    QDir dplyDir(GlobalConfig::DeployPath);
+    QString folderName = dplyDir.dirName();
+    dplyDir.cdUp();
+
+    QDir projDir(GlobalConfig::ProjectPath);
+    QString projName = projDir.dirName();
+
+    m_7z->setWorkingDirectory(dplyDir.absolutePath());
     m_7z->setProgram("7z");
-    m_7z->setArguments(QStringList() << "a" << "7zname.7z" << "foldername"); // todo:global setting
+    m_7z->setArguments(QStringList() << "a" << (projName + "-" + QDate::currentDate().toString("yyyyMMdd") + ".7z") << folderName); // todo:global setting
 
     connect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStatePackaging::processFinished);
     connect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStatePackaging::processError);

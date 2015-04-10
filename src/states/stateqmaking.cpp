@@ -1,6 +1,8 @@
 #include "stateqmaking.h"
+#include "globalconfig.h"
 
 #include <QTimer>
+#include <QDir>
 
 NBStateQMaking::NBStateQMaking(QObject *parent) : NBState(parent), m_qmake(NULL), m_waitTimer(NULL), m_running(false), m_isError(false)
 {
@@ -44,8 +46,13 @@ void NBStateQMaking::run()
     }
 
     m_qmake = new QProcess;
+    m_qmake->setWorkingDirectory(GlobalConfig::BuildPath);
     m_qmake->setProgram("qmake");
-    m_qmake->setArguments(QStringList() << "\"CONFIG+=buildbot\"" << "a.pro"); // todo:global setting
+
+    QDir buildDir(GlobalConfig::BuildPath);
+    QString relativePath = buildDir.relativeFilePath(GlobalConfig::DeployPath);
+
+    m_qmake->setArguments(QStringList() << "\"CONFIG+=buildbot\"" << relativePath);
 
     connect(m_qmake, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStateQMaking::processFinished);
     connect(m_qmake, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStateQMaking::processError);
