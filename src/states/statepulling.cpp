@@ -32,6 +32,8 @@ void NBStatePulling::run()
     }
 
     if (m_git != NULL) {
+        disconnect(m_git, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+        disconnect(m_git, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
         if (m_git->state() != QProcess::NotRunning)
             m_git->kill();
         if (m_git->state() == QProcess::NotRunning || m_git->waitForFinished()) {
@@ -113,4 +115,27 @@ void NBStatePulling::timeout()
         m_git->kill();
 
     emit error();
+}
+
+void NBStatePulling::shutUp()
+{
+    m_waitTimer->stop();
+    disconnect(m_git, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+    disconnect(m_git, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
+    if (m_git->state() != QProcess::NotRunning)
+        m_git->kill();
+    if (m_git->state() == QProcess::NotRunning || m_git->waitForFinished()) {
+
+    } else {
+        /*
+        // log
+        m_isError = true;
+        emit fatal();
+        return;
+        */
+    }
+    m_git->deleteLater();
+    m_git = NULL;
+
+    emit stopped();
 }

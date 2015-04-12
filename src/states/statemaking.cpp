@@ -31,6 +31,8 @@ void NBStateMaking::run()
     }
 
     if (m_make != NULL) {
+        disconnect(m_make, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+        disconnect(m_make, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
         if (m_make->state() != QProcess::NotRunning)
             m_make->kill();
         if (m_make->state() == QProcess::NotRunning || m_make->waitForFinished()) {
@@ -112,4 +114,27 @@ void NBStateMaking::timeout()
         m_make->kill();
 
     emit error();
+}
+
+void NBStateMaking::shutUp()
+{
+    m_waitTimer->stop();
+    disconnect(m_make, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+    disconnect(m_make, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
+    if (m_make->state() != QProcess::NotRunning)
+        m_make->kill();
+    if (m_make->state() == QProcess::NotRunning || m_make->waitForFinished()) {
+
+    } else {
+        /*
+        // log
+        m_isError = true;
+        emit fatal();
+        return;
+        */
+    }
+    m_make->deleteLater();
+    m_make = NULL;
+
+    emit stopped();
 }

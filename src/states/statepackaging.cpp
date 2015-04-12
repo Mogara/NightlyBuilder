@@ -32,6 +32,8 @@ void NBStatePackaging::run()
     }
 
     if (m_7z != NULL) {
+        disconnect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+        disconnect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
         if (m_7z->state() != QProcess::NotRunning)
             m_7z->kill();
         if (m_7z->state() == QProcess::NotRunning || m_7z->waitForFinished()) {
@@ -120,4 +122,27 @@ void NBStatePackaging::timeout()
         m_7z->kill();
 
     emit error();
+}
+
+void NBStatePackaging::shutUp()
+{
+    m_waitTimer->stop();
+    disconnect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+    disconnect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
+    if (m_7z->state() != QProcess::NotRunning)
+        m_7z->kill();
+    if (m_7z->state() == QProcess::NotRunning || m_7z->waitForFinished()) {
+
+    } else {
+        /*
+        // log
+        m_isError = true;
+        emit fatal();
+        return;
+        */
+    }
+    m_7z->deleteLater();
+    m_7z = NULL;
+
+    emit stopped();
 }

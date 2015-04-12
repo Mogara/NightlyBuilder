@@ -11,6 +11,7 @@ public:
     ~NBStateGeneratingBotVersionCpp();
 
     void run();
+    void shutUp();
 
 signals:
 

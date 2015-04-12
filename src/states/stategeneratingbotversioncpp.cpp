@@ -54,3 +54,8 @@ void NBStateGeneratingBotVersionCpp::run()
 
     emit finished();
 }
+
+void NBStateGeneratingBotVersionCpp::shutUp()
+{
+    // does nothing!!!
+}

@@ -14,11 +14,15 @@ public:
 
 protected:
     virtual void run() = 0;
+    virtual void shutUp() = 0;
+
+    bool m_stopping;
 
 signals:
     void finished();
     void error();
     void fatal();
+    void stopped();
 
 private:
     int m_retryTimes;
@@ -26,6 +30,7 @@ private:
 public slots:
     void retry();
     void start();
+    void stop();
 };
 
 #endif // NBSTATE_H

@@ -14,6 +14,7 @@ public:
     ~NBStateUploading();
 
     void run();
+    void shutUp();
 
 public slots:
     void uploadFinished();

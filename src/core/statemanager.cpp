@@ -16,7 +16,7 @@ NBStateManager::State operator++(NBStateManager::State &arg, int /*rightOperator
     return s;
 }
 
-NBStateManager::NBStateManager(QObject *parent) : QObject(parent), m_currentState(NonState)
+NBStateManager::NBStateManager(QObject *parent) : QObject(parent), m_currentState(NonState), m_stopping(false)
 {
     for (State state = NonState; state <= Finished; ++state) {
         NBState *s = NBStateFactory::createState(state);
@@ -34,6 +34,8 @@ NBStateManager::~NBStateManager()
 
 void NBStateManager::start()
 {
+    m_stopping = false;
+
     m_currentState = Pulling;
     NBState *s = m_stateMap[m_currentState];
 
@@ -46,8 +48,31 @@ void NBStateManager::start()
     s->start();
 }
 
+void NBStateManager::stop()
+{
+    NBState *s = m_stateMap[m_currentState];
+    if (s != NULL) {
+        s->stop();
+        m_stopping = true;
+    } else {
+        // Stop with nothing on going??? What is the ghost???
+        oneStopped();
+    }
+}
+
+void NBStateManager::oneStopped()
+{
+    emit stopped();
+}
+
 void NBStateManager::oneFinished()
 {
+    if (m_stopping) {
+        m_stopping = false;
+        emit stopped();
+        return;
+    }
+
     ++m_currentState;
     if (m_currentState == Finished)
         emit finished();
@@ -65,6 +90,12 @@ void NBStateManager::oneFinished()
 
 void NBStateManager::oneError()
 {
+    if (m_stopping) {
+        m_stopping = false;
+        emit stopped();
+        return;
+    }
+
     int retryLimit = 1;
     if (m_currentState == Pulling || m_currentState == Uploading)
         retryLimit = 5;

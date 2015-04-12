@@ -14,6 +14,7 @@ public:
     ~NBStateDeploying();
 
     void run();
+    void shutUp();
 
 public slots:
     void deployFinished();

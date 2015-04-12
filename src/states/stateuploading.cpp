@@ -29,6 +29,7 @@ void NBStateUploading::run()
     }
 
     if (m_upload != NULL) {
+        disconnect(m_upload, &QThread::finished, this, 0);
         if (m_upload->isRunning())
             m_upload->terminate();
         if (!m_upload->isRunning() || m_upload->wait()) {
@@ -53,6 +54,28 @@ void NBStateUploading::run()
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateUploading::timeout);
 
     m_upload->start();
+}
+
+void NBStateUploading::shutUp()
+{
+    m_waitTimer->stop();
+    disconnect(m_upload, &QThread::finished, this, 0);
+    if (m_upload->isRunning())
+        m_upload->terminate();
+    if (!m_upload->isRunning() || m_upload->wait()) {
+
+    } else {
+    /*
+        m_isError = true;
+        emit fatal();
+        return;
+    */
+        // we ignore this error.
+    }
+    m_upload->deleteLater();
+    m_upload = NULL;
+
+    emit stopped();
 }
 
 void NBStateUploading::uploadFinished()

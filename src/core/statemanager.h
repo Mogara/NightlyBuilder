@@ -36,16 +36,20 @@ public:
 signals:
     void finished();
     void error();
+    void stopped();
 
 public slots:
     void start();
+    void stop();
 
     void oneFinished();
     void oneError();
+    void oneStopped();
 
 private:
     QMap<State, NBState *> m_stateMap;
     State m_currentState;
+    bool m_stopping;
 };
 
 NBStateManager::State operator++(NBStateManager::State &arg);

@@ -14,6 +14,7 @@ public:
     ~NBStateMaking();
 
     void run();
+    void shutUp();
 
 public slots:
     void processFinished(int exitCode, QProcess::ExitStatus exitStatus);

@@ -29,6 +29,7 @@ void NBStateDeploying::run()
     }
 
     if (m_deploy != NULL) {
+        disconnect(m_deploy, &QThread::finished, this, 0);
         if (m_deploy->isRunning())
             m_deploy->terminate();
         if (!m_deploy->isRunning() || m_deploy->wait()) {
@@ -38,7 +39,7 @@ void NBStateDeploying::run()
             emit fatal();
             return;
         }
-        delete m_deploy;
+        m_deploy->deleteLater();
         m_deploy = NULL;
     }
 
@@ -56,9 +57,35 @@ void NBStateDeploying::run()
     m_deploy->start();
 }
 
+void NBStateDeploying::shutUp()
+{
+    m_waitTimer->stop();
+    disconnect(m_deploy, &QThread::finished, this, 0);
+    if (m_deploy->isRunning())
+        m_deploy->terminate();
+    if (!m_deploy->isRunning() || m_deploy->wait()) {
+
+    } else {
+    /*
+        m_isError = true;
+        emit fatal();
+        return;
+    */
+        // we ignore this error.
+    }
+    m_deploy->deleteLater();
+    m_deploy = NULL;
+
+    emit stopped();
+}
+
 void NBStateDeploying::deployFinished()
 {
-    if (m_deploy->succeed) {
+    bool succeed = m_deploy->succeed;
+    m_deploy->deleteLater();
+    m_deploy = NULL;
+
+    if (succeed) {
         m_running = false;
         emit finished();
     } else {
@@ -66,8 +93,6 @@ void NBStateDeploying::deployFinished()
         emit error();
     }
 
-    m_deploy->deleteLater();
-    m_deploy = NULL;
 }
 
 void NBStateDeploying::timeout()
