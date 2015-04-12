@@ -45,6 +45,7 @@ public slots:
     void oneFinished();
     void oneError();
     void oneStopped();
+    void oneFatal();
 
 private:
     QMap<State, NBState *> m_stateMap;

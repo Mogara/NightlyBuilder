@@ -20,8 +20,13 @@ NBStateManager::NBStateManager(QObject *parent) : QObject(parent), m_currentStat
 {
     for (State state = NonState; state <= Finished; ++state) {
         NBState *s = NBStateFactory::createState(state);
-        if (s != NULL)
+        if (s != NULL) {
             s->setParent(this);
+            connect(s, &NBState::finished, this, &NBStateManager::oneFinished);
+            connect(s, &NBState::error, this, &NBStateManager::oneError);
+            connect(s, &NBState::stopped, this, &NBStateManager::oneStopped);
+            connect(s, &NBState::fatal, this, &NBStateManager::oneFatal);
+        }
 
         m_stateMap[state] = s;
     }
@@ -62,14 +67,14 @@ void NBStateManager::stop()
 
 void NBStateManager::oneStopped()
 {
+    m_stopping = false;
     emit stopped();
 }
 
 void NBStateManager::oneFinished()
 {
     if (m_stopping) {
-        m_stopping = false;
-        emit stopped();
+        oneStopped();
         return;
     }
 
@@ -91,8 +96,7 @@ void NBStateManager::oneFinished()
 void NBStateManager::oneError()
 {
     if (m_stopping) {
-        m_stopping = false;
-        emit stopped();
+        oneStopped();
         return;
     }
 
@@ -113,4 +117,15 @@ void NBStateManager::oneError()
         m_currentState = Error;
         emit error();
     }
+}
+
+void NBStateManager::oneFatal()
+{
+    if (m_stopping) {
+        oneStopped();
+        return;
+    }
+
+    m_currentState = Error;
+    emit error();
 }
