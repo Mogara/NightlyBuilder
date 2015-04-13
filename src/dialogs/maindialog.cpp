@@ -15,6 +15,7 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     addPathLine(tr("Build Path"), m_buildPathEdit);
     addPathLine(tr("Qt Path"), m_qtPathEdit);
     addPathLine(tr("Deploy Path"), m_deployPathEdit);
+    addPathLine(tr("FTP Path"), m_ftpPathEdit);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch();
@@ -52,9 +53,7 @@ void NBMainDialog::showFileDialog()
     QPushButton *button = qobject_cast<QPushButton *>(sender());
     Q_ASSERT(button);
     QLineEdit *edit = m_buttonEditPairs[button];
-    QString path = QFileDialog::getExistingDirectory(this,
-                                                     tr("Please Select A Directory"),
-                                                     edit->text());
+    QString path = QFileDialog::getExistingDirectory(this, tr("Please Select A Directory"), edit->text());
 
     if (!path.isEmpty())
         edit->setText(path);
@@ -68,4 +67,5 @@ void NBMainDialog::saveSettings()
     BuildPath = m_buildPathEdit->text();
     QtPath = m_qtPathEdit->text();
     DeployPath = m_deployPathEdit->text();
+    FtpPath = m_ftpPathEdit->text();
 }

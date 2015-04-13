@@ -20,6 +20,7 @@ private:
     QLineEdit *m_buildPathEdit;
     QLineEdit *m_qtPathEdit;
     QLineEdit *m_deployPathEdit;
+    QLineEdit *m_ftpPathEdit;
     QHash<QPushButton *, QLineEdit *> m_buttonEditPairs;
 
     void addPathLine(const QString &name, QLineEdit *&edit);
