@@ -3,7 +3,7 @@
 
 #include <QTimer>
 
-NBStateUploading::NBStateUploading(QObject *parent) : NBState(parent)
+NBStateUploading::NBStateUploading(QObject *parent) : NBState(parent), m_waitTimer(NULL)
 {
 
 }

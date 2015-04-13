@@ -3,7 +3,7 @@
 
 #include <QTimer>
 
-NBStateDeploying::NBStateDeploying(QObject *parent) : NBState(parent), m_deploy(NULL)
+NBStateDeploying::NBStateDeploying(QObject *parent) : NBState(parent), m_deploy(NULL), m_waitTimer(NULL)
 {
 
 }
