@@ -65,6 +65,9 @@ bool NBLog::openLogFile(const QString &logName)
 
 void NBLog::closeLogFile()
 {
+    if (m_logFile == NULL)
+        return;
+
     if (m_logThread != NULL)
         m_logFile->moveToThread(QThread::currentThread());
 
