@@ -27,10 +27,9 @@ NBLog::~NBLog()
 
         } else {
             // unhandled error occurred!!!
-            // temporary solution: force the program to crash!!!
-            QMessageBox::critical(NULL, tr("Nightly Builder"), tr("Fatal error occurred. This program is going to crash."));
-            int &a = *((int *)(NULL));
-            a = 1;
+            // temporary solution: force the program to terminate!!!
+            QMessageBox::critical(NULL, tr("Nightly Builder"), tr("Fatal error occurred. This program is going to terminate."));
+            std::terminate();
         }
 
         m_logThread->deleteLater();
