@@ -16,6 +16,7 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     addPathLine(tr("Qt Path"), m_qtPathEdit);
     addPathLine(tr("Deploy Path"), m_deployPathEdit);
     addPathLine(tr("FTP Path"), m_ftpPathEdit);
+    addPathLine(tr("Log Path"), m_logPathEdit);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch();
@@ -68,4 +69,5 @@ void NBMainDialog::saveSettings()
     QtPath = m_qtPathEdit->text();
     DeployPath = m_deployPathEdit->text();
     FtpPath = m_ftpPathEdit->text();
+    LogPath = m_logPathEdit->text();
 }

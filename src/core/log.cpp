@@ -1,9 +1,11 @@
 #include "log.h"
+#include "globalconfig.h"
 
 #include <QFile>
 #include <QThread>
-
+#include <QDir>
 #include <QMessageBox>
+#include <QDate>
 
 NBLog::NBLog(QObject *parent) : QObject(parent), m_opened(false), m_logFile(NULL), m_logThread(NULL)
 {
@@ -41,7 +43,13 @@ bool NBLog::openLogFile(const QString &logName)
     if (m_logFile != NULL)
         closeLogFile();
 
-    m_logFile = new QFile(logName);
+    QDir d(GlobalConfig::LogPath);
+    if (!d.exists())
+        d.mkpath(GlobalConfig::LogPath);
+
+    QString fileName = d.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");
+
+    m_logFile = new QFile(fileName);
     if (!m_logFile->open(QIODevice::WriteOnly | QIODevice::Truncate))
         return false;
 
