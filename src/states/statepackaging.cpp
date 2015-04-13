@@ -27,6 +27,7 @@ void NBStatePackaging::run()
     m_isError = false;
 
     if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
         delete m_waitTimer;
         m_waitTimer = NULL;
     }
@@ -89,6 +90,8 @@ void NBStatePackaging::processFinished(int exitCode, QProcess::ExitStatus exitSt
         return;
     }
 
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
 
     if (exitStatus != QProcess::NormalExit || exitCode != 0) {
         QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
@@ -118,6 +121,11 @@ void NBStatePackaging::timeout()
     m_isError = true;
     //m_running = false;
 
+    if (m_7z == NULL) {
+        // what the hell?
+        return;
+    }
+
     if (m_7z->state() != QProcess::NotRunning)
         m_7z->kill();
 
@@ -126,7 +134,14 @@ void NBStatePackaging::timeout()
 
 void NBStatePackaging::shutUp()
 {
-    m_waitTimer->stop();
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_7z == NULL) {
+        // what the fuck??
+        return;
+    }
+
     disconnect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
     disconnect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
     if (m_7z->state() != QProcess::NotRunning)

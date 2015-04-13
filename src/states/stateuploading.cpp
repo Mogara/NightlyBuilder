@@ -24,6 +24,7 @@ void NBStateUploading::run()
     m_running = true;
 
     if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
         delete m_waitTimer;
         m_waitTimer = NULL;
     }
@@ -58,7 +59,14 @@ void NBStateUploading::run()
 
 void NBStateUploading::shutUp()
 {
-    m_waitTimer->stop();
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_upload == NULL) {
+        // not running?
+        return;
+    }
+
     disconnect(m_upload, &QThread::finished, this, 0);
     if (m_upload->isRunning())
         m_upload->terminate();
@@ -80,6 +88,14 @@ void NBStateUploading::shutUp()
 
 void NBStateUploading::uploadFinished()
 {
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_upload == NULL) {
+        // what the fuck??
+        return;
+    }
+
     m_running = false;
     emit finished();
 
@@ -90,6 +106,11 @@ void NBStateUploading::uploadFinished()
 void NBStateUploading::timeout()
 {
     //m_running = false;
+
+    if (m_upload == NULL) {
+        // what the hell?
+        return;
+    }
 
     if (m_upload->isRunning())
         m_upload->terminate();

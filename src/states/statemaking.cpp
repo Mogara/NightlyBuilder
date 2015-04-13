@@ -26,6 +26,7 @@ void NBStateMaking::run()
     m_isError = false;
 
     if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
         delete m_waitTimer;
         m_waitTimer = NULL;
     }
@@ -81,6 +82,8 @@ void NBStateMaking::processFinished(int exitCode, QProcess::ExitStatus exitStatu
         return;
     }
 
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
 
     if (exitStatus != QProcess::NormalExit || exitCode != 0) {
         QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
@@ -110,6 +113,11 @@ void NBStateMaking::timeout()
     m_isError = true;
     //m_running = false;
 
+    if (m_make == NULL) {
+        // what the hell?
+        return;
+    }
+
     if (m_make->state() != QProcess::NotRunning)
         m_make->kill();
 
@@ -118,7 +126,14 @@ void NBStateMaking::timeout()
 
 void NBStateMaking::shutUp()
 {
-    m_waitTimer->stop();
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_make == NULL) {
+        // what the fuck??
+        return;
+    }
+
     disconnect(m_make, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
     disconnect(m_make, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
     if (m_make->state() != QProcess::NotRunning)

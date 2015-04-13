@@ -24,6 +24,7 @@ void NBStateDeploying::run()
     m_isError = false;
 
     if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
         delete m_waitTimer;
         m_waitTimer = NULL;
     }
@@ -59,7 +60,14 @@ void NBStateDeploying::run()
 
 void NBStateDeploying::shutUp()
 {
-    m_waitTimer->stop();
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_deploy == NULL) {
+        // not running?
+        return;
+    }
+
     disconnect(m_deploy, &QThread::finished, this, 0);
     if (m_deploy->isRunning())
         m_deploy->terminate();
@@ -81,6 +89,14 @@ void NBStateDeploying::shutUp()
 
 void NBStateDeploying::deployFinished()
 {
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_deploy == NULL) {
+        // what the fuck??
+        return;
+    }
+
     bool succeed = m_deploy->succeed;
     m_deploy->deleteLater();
     m_deploy = NULL;
@@ -99,6 +115,11 @@ void NBStateDeploying::timeout()
 {
     m_isError = true;
     //m_running = false;
+
+    if (m_deploy == NULL) {
+        // what the hell?
+        return;
+    }
 
     if (m_deploy->isRunning())
         m_deploy->terminate();
