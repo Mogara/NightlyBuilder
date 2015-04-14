@@ -1,5 +1,6 @@
 #include "deploy.h"
 #include "global.h"
+#include "log.h"
 
 #include <QDate>
 #include <QDir>
@@ -69,6 +70,11 @@ void NBDeployThread::run()
 {
     succeed = true;
 
+    auto writeLog = [](NBLog *logFile, const QString &logContent) -> void {
+        if (logFile != NULL)
+            logFile->insertLog(logContent);
+    };
+
     QDir proj(GlobalConfig::ProjectPath);
     QFile dplyFile(proj.absoluteFilePath("bot.dply"));
     try {
@@ -115,20 +121,33 @@ void NBDeployThread::run()
     bool ok = true;
 
     // Step 1: copy the exe file
+    writeLog(logFile, "Step 1: copy the exe file:");
     QDir buld(GlobalConfig::BuildPath);
     ok &= buld.cd("release");
     if (QFile::exists(buld.absoluteFilePath("QSanguosha.exe")))
         ok &= QFile::copy(buld.absoluteFilePath("QSanguosha.exe"), dply.absoluteFilePath("QSanguosha.exe"));
 
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
     // Step 2: copy the folders from ProjectPath to DeployPath
+    writeLog(logFile, "Step 2: copy the folders from ProjectPath to DeployPath:");
     foreach (const QString &f, folderList) {
         QString oldPath = proj.absoluteFilePath(f);
         QString newPath = dply.absoluteFilePath(f);
         ok &= copyFolder(oldPath, newPath);
     }
 
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
     // Step 3: copy the files from ProjectPath to DeployPath
     // reminder: there is some items that contains "->" substring in the folder list, so distinguish it
+    writeLog(logFile, "Step 3: copy the files from ProjectPath to DeployPath:");
     foreach (const QString &f, fileList) {
         QString oldFileName = f;
         QString newFileName = f;
@@ -144,7 +163,13 @@ void NBDeployThread::run()
         ok &= QFile::copy(oldPath, newPath);
     }
 
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
     // Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath
+    writeLog(logFile, "Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath:");
     QDir qt(GlobalConfig::QtPath);
     ok &= qt.cd("bin");
     foreach (const QString &f, qtLibList) {
@@ -153,8 +178,14 @@ void NBDeployThread::run()
         ok &= QFile::copy(oldPath, newPath);
     }
 
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
     // Step 5: copy the Qt plugins to DeployPath
     // reminder: Remove the debug version of plugins
+    writeLog(logFile, "Step 5: copy the Qt plugins to DeployPath:");
     qt = QDir(GlobalConfig::QtPath);
     ok &= qt.cd("plugins");
     foreach (const QString &f, qtPlugList) {
@@ -165,6 +196,14 @@ void NBDeployThread::run()
         QDir newDir(newPath);
         ok &= removeDebugDlls(newDir);
     }
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    // Step 6: copy the former log file to deploy folder
+    // todo
 
     if (!ok)
         succeed = false;

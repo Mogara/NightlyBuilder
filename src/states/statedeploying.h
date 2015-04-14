@@ -4,6 +4,7 @@
 #include "state.h"
 
 class NBDeployThread;
+class NBLog;
 class QTimer;
 
 class NBStateDeploying : public NBState
@@ -25,6 +26,8 @@ private:
     QTimer *m_waitTimer;
     bool m_running;
     bool m_isError;
+
+    NBLog *m_logWritter;
 };
 
 #endif // NBSTATEDEPLOYING_H

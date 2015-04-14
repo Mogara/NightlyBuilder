@@ -3,6 +3,8 @@
 
 #include <QThread>
 
+class NBLog;
+
 class NBDeployThread : public QThread
 {
     Q_OBJECT
@@ -13,6 +15,8 @@ public:
     void run();
 
     bool succeed;
+
+    NBLog *logFile;
 
 };
 
