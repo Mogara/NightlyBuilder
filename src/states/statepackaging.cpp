@@ -1,5 +1,5 @@
 #include "statepackaging.h"
-#include "globalconfig.h"
+#include "global.h"
 
 #include <QTimer>
 #include <QDir>

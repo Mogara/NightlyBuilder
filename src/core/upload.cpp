@@ -1,5 +1,5 @@
 #include "upload.h"
-#include "globalconfig.h"
+#include "global.h"
 
 #include <QDir>
 #include <QFile>

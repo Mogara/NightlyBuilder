@@ -1,5 +1,5 @@
 #include "deploy.h"
-#include "globalconfig.h"
+#include "global.h"
 
 #include <QDate>
 #include <QDir>

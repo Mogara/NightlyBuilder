@@ -1,5 +1,5 @@
 #include "statepulling.h"
-#include "globalconfig.h"
+#include "global.h"
 
 
 #include <QTimer>

@@ -1,9 +1,10 @@
-#ifndef GLOBALCONFIG_H
-#define GLOBALCONFIG_H
+#ifndef GLOBAL_H
+#define GLOBAL_H
 
 #include <QString>
 
-namespace GlobalConfig {
+namespace GlobalConfig
+{
     extern const QString DefaultBuildPath;
     extern const QString DefaultDeployPath;
 
@@ -15,5 +16,10 @@ namespace GlobalConfig {
     extern QString LogPath;
 }
 
-#endif // GLOBALCONFIG_H
+namespace GlobalMethod
+{
+    void crash();
+}
+
+#endif // GLOBAL_H
 

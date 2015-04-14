@@ -25,11 +25,11 @@ SOURCES += \
     src/states/statedeploying.cpp \
     src/states/statepackaging.cpp \
     src/states/stateuploading.cpp \
-    src/core/globalconfig.cpp \
     src/states/statefactory.cpp \
     src/core/deploy.cpp \
     src/core/upload.cpp \
-    src/core/log.cpp
+    src/core/log.cpp \
+    src/core/global.cpp
 
 HEADERS  += \
     src/dialogs/maindialog.h \
@@ -43,11 +43,11 @@ HEADERS  += \
     src/states/statedeploying.h \
     src/states/statepackaging.h \
     src/states/stateuploading.h \
-    src/core/globalconfig.h \
     src/states/statefactory.h \
     src/core/deploy.h \
     src/core/upload.h \
-    src/core/log.h
+    src/core/log.h \
+    src/core/global.h
 
 INCLUDEPATH += \
     src/states \

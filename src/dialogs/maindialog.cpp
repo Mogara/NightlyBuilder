@@ -1,5 +1,5 @@
 #include "maindialog.h"
-#include "globalconfig.h"
+#include "global.h"
 
 #include <QFileDialog>
 #include <QLabel>

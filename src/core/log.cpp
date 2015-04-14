@@ -1,10 +1,9 @@
 #include "log.h"
-#include "globalconfig.h"
+#include "global.h"
 
 #include <QFile>
 #include <QThread>
 #include <QDir>
-#include <QMessageBox>
 #include <QDate>
 
 NBLog::NBLog(QObject *parent) : QObject(parent), m_opened(false), m_logFile(NULL), m_logThread(NULL)
@@ -25,12 +24,8 @@ NBLog::~NBLog()
             m_logThread->quit();
         if (!m_logThread->isRunning() || m_logThread->wait(10000UL)) {
 
-        } else {
-            // unhandled error occurred!!!
-            // temporary solution: force the program to terminate!!!
-            QMessageBox::critical(NULL, tr("Nightly Builder"), tr("Fatal error occurred. This program is going to terminate."));
-            std::terminate();
-        }
+        } else
+            GlobalMethod::crash();
 
         m_logThread->deleteLater();
     }
