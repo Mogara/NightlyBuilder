@@ -5,6 +5,9 @@
 
 class QLineEdit;
 class QVBoxLayout;
+class QCloseEvent;
+
+class NBStateManager;
 
 class NBMainDialog : public QDialog
 {
@@ -16,6 +19,10 @@ public:
 
 private:
     QVBoxLayout *m_layout;
+
+    QPushButton *m_applyBtn;
+    QPushButton *m_runBtn;
+
     QLineEdit *m_projectPathEdit;
     QLineEdit *m_buildPathEdit;
     QLineEdit *m_qtPathEdit;
@@ -29,6 +36,22 @@ private:
 private slots:
     void showFileDialog();
     void saveSettings();
+
+    void startOrStopRunning();
+    void startCompiling();
+
+    void runFinishedOnce();
+    void runStopped();
+    void runError();
+
+private:
+    QTimer *m_t;
+    NBStateManager *m_nbsm;
+
+    bool m_stopping;
+
+protected:
+    void closeEvent(QCloseEvent *);
 };
 
 #endif // MAINDIALOG_H
