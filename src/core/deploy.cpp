@@ -67,6 +67,8 @@ namespace {
 
 void NBDeployThread::run()
 {
+    succeed = true;
+
     QDir proj(GlobalConfig::ProjectPath);
     QFile dplyFile(proj.absoluteFilePath("bot.dply"));
     try {
