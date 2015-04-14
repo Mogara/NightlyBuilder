@@ -1,5 +1,6 @@
 #include "statedeploying.h"
 #include "deploy.h"
+#include "global.h"
 
 #include <QTimer>
 
@@ -10,7 +11,22 @@ NBStateDeploying::NBStateDeploying(QObject *parent) : NBState(parent), m_deploy(
 
 NBStateDeploying::~NBStateDeploying()
 {
+    if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
+        delete m_waitTimer;
+    }
 
+    if (m_deploy != NULL) {
+        disconnect(m_deploy, &QThread::finished, this, 0);
+        if (m_deploy->isRunning())
+            m_deploy->terminate();
+        if (!m_deploy->isRunning() || m_deploy->wait()) {
+
+        } else
+            GlobalMethod::crash();
+
+        m_deploy->deleteLater();
+    }
 }
 
 void NBStateDeploying::run()
@@ -23,11 +39,8 @@ void NBStateDeploying::run()
     m_running = true;
     m_isError = false;
 
-    if (m_waitTimer != NULL) {
+    if (m_waitTimer != NULL)
         m_waitTimer->stop();
-        delete m_waitTimer;
-        m_waitTimer = NULL;
-    }
 
     if (m_deploy != NULL) {
         disconnect(m_deploy, &QThread::finished, this, 0);
@@ -50,7 +63,8 @@ void NBStateDeploying::run()
 
     // start timer before the thread start
 
-    m_waitTimer = new QTimer;
+    if (m_waitTimer == NULL)
+        m_waitTimer = new QTimer;
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(60000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateDeploying::timeout);

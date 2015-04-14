@@ -1,5 +1,6 @@
 #include "stateuploading.h"
 #include "upload.h"
+#include "global.h"
 
 #include <QTimer>
 
@@ -10,7 +11,22 @@ NBStateUploading::NBStateUploading(QObject *parent) : NBState(parent), m_waitTim
 
 NBStateUploading::~NBStateUploading()
 {
+    if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
+        delete m_waitTimer;
+    }
 
+    if (m_upload != NULL) {
+        disconnect(m_upload, &QThread::finished, this, 0);
+        if (m_upload->isRunning())
+            m_upload->terminate();
+        if (!m_upload->isRunning() || m_upload->wait()) {
+
+        } else
+            GlobalMethod::crash();
+
+        m_upload->deleteLater();
+    }
 }
 
 
@@ -23,11 +39,8 @@ void NBStateUploading::run()
 
     m_running = true;
 
-    if (m_waitTimer != NULL) {
+    if (m_waitTimer != NULL)
         m_waitTimer->stop();
-        delete m_waitTimer;
-        m_waitTimer = NULL;
-    }
 
     if (m_upload != NULL) {
         disconnect(m_upload, &QThread::finished, this, 0);
@@ -49,7 +62,8 @@ void NBStateUploading::run()
 
     // start timer before the thread start
 
-    m_waitTimer = new QTimer;
+    if (m_waitTimer == NULL)
+        m_waitTimer = new QTimer;
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(60000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateUploading::timeout);

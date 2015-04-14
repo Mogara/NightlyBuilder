@@ -12,7 +12,23 @@ NBStatePackaging::NBStatePackaging(QObject *parent) : NBState(parent), m_7z(NULL
 
 NBStatePackaging::~NBStatePackaging()
 {
+    if (m_waitTimer != NULL) {
+        m_waitTimer->stop();
+        delete m_waitTimer;
+    }
 
+    if (m_7z != NULL) {
+        disconnect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
+        disconnect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, 0);
+        if (m_7z->state() != QProcess::NotRunning)
+            m_7z->kill();
+        if (m_7z->state() == QProcess::NotRunning || m_7z->waitForFinished()) {
+
+        } else
+            GlobalMethod::crash();
+
+        m_7z->deleteLater();
+    }
 }
 
 
@@ -26,11 +42,8 @@ void NBStatePackaging::run()
     m_running = true;
     m_isError = false;
 
-    if (m_waitTimer != NULL) {
+    if (m_waitTimer != NULL)
         m_waitTimer->stop();
-        delete m_waitTimer;
-        m_waitTimer = NULL;
-    }
 
     if (m_7z != NULL) {
         disconnect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, 0);
@@ -66,7 +79,8 @@ void NBStatePackaging::run()
 
     // start timer before the process start
 
-    m_waitTimer = new QTimer();
+    if (m_waitTimer == NULL)
+        m_waitTimer = new QTimer;
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(1800000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStatePackaging::timeout);

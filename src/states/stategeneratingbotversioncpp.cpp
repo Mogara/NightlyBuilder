@@ -12,7 +12,7 @@ NBStateGeneratingBotVersionCpp::NBStateGeneratingBotVersionCpp(QObject *parent) 
 
 NBStateGeneratingBotVersionCpp::~NBStateGeneratingBotVersionCpp()
 {
-
+    // deletes nothing!!
 }
 
 
