@@ -15,7 +15,6 @@ TEMPLATE = app
 SOURCES += \
     src/main.cpp \
     src/dialogs/maindialog.cpp \
-    src/dialogs/rundialog.cpp \
     src/core/statemanager.cpp \
     src/states/statepulling.cpp \
     src/states/stategeneratingbotversioncpp.cpp \
@@ -33,7 +32,6 @@ SOURCES += \
 
 HEADERS  += \
     src/dialogs/maindialog.h \
-    src/dialogs/rundialog.h \
     src/core/statemanager.h \
     src/states/statepulling.h \
     src/states/stategeneratingbotversioncpp.h \

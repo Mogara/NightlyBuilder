@@ -1,6 +1,6 @@
 #include "state.h"
 
-NBState::NBState(QObject *parent) : QObject(parent), m_retryTimes(0), m_stopping(false)
+NBState::NBState(QObject *parent) : QObject(parent), m_stopping(false), m_retryTimes(0)
 {
 
 }
