@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QFormLayout>
 #include <QTimer>
 #include <QCloseEvent>
 #include <QDateTime>
@@ -19,12 +20,15 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     : QDialog(parent), m_t(NULL), m_nbsm(NULL), m_stopping(false)
 {
     m_layout =  new QVBoxLayout;
+    m_pathLineLayout = new QFormLayout;
     addPathLine(tr("Project Path"), m_projectPathEdit);
     addPathLine(tr("Build Path"), m_buildPathEdit);
     addPathLine(tr("Qt Path"), m_qtPathEdit);
     addPathLine(tr("Deploy Path"), m_deployPathEdit);
     addPathLine(tr("FTP Path"), m_ftpPathEdit);
     addPathLine(tr("Log Path"), m_logPathEdit);
+
+    m_layout->addLayout(m_pathLineLayout);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->addStretch();
@@ -59,18 +63,18 @@ void NBMainDialog::closeEvent(QCloseEvent *e)
 
 void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit)
 {
-    QHBoxLayout *layout = new QHBoxLayout;
-    layout->addWidget(new QLabel(name));
+    QHBoxLayout *h = new QHBoxLayout;
 
     edit = new QLineEdit;
-    layout->addWidget(edit);
 
     QPushButton *button = new QPushButton(tr("Browse..."));
     m_buttonEditPairs.insert(button, edit);
-    layout->addWidget(button);
     connect(button, &QPushButton::released, this, &NBMainDialog::showFileDialog);
 
-    m_layout->addLayout(layout);
+    h->addWidget(edit);
+    h->addWidget(button);
+
+    m_pathLineLayout->addRow(name, h);
 }
 
 void NBMainDialog::showFileDialog()

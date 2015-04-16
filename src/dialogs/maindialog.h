@@ -5,6 +5,7 @@
 
 class QLineEdit;
 class QVBoxLayout;
+class QFormLayout;
 class QCloseEvent;
 
 class NBStateManager;
@@ -19,6 +20,7 @@ public:
 
 private:
     QVBoxLayout *m_layout;
+    QFormLayout *m_pathLineLayout;
 
     QPushButton *m_applyBtn;
     QPushButton *m_runBtn;
