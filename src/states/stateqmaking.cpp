@@ -1,5 +1,6 @@
 #include "stateqmaking.h"
 #include "global.h"
+#include "log.h"
 
 #include <QTimer>
 #include <QDir>
@@ -117,9 +118,14 @@ void NBStateQMaking::processFinished(int exitCode, QProcess::ExitStatus exitStat
     QString stdOut = QString::fromLocal8Bit(p->readAllStandardOutput());
     QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
 
-    // log
-    Q_UNUSED(stdOut); // temp solution
-    Q_UNUSED(stdErr);
+    NBLog logstdOut;
+    logstdOut.openLogFile("QMake-StdOut");
+    logstdOut.insertLog(stdOut);
+    logstdOut.closeLogFile();
+    NBLog logstdErr;
+    logstdErr.openLogFile("QMake-StdErr");
+    logstdErr.insertLog(stdErr);
+    logstdErr.closeLogFile();
 
     m_running = false;
 

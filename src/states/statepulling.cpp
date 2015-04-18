@@ -1,5 +1,6 @@
 #include "statepulling.h"
 #include "global.h"
+#include "log.h"
 
 
 #include <QTimer>
@@ -113,9 +114,14 @@ void NBStatePulling::processFinished(int exitCode, QProcess::ExitStatus exitStat
     QString stdOut = QString::fromLocal8Bit(p->readAllStandardOutput());
     QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
 
-    // log
-    Q_UNUSED(stdOut); // temp solution
-    Q_UNUSED(stdErr);
+    NBLog logstdOut;
+    logstdOut.openLogFile("git-StdOut");
+    logstdOut.insertLog(stdOut);
+    logstdOut.closeLogFile();
+    NBLog logstdErr;
+    logstdErr.openLogFile("git-StdErr");
+    logstdErr.insertLog(stdErr);
+    logstdErr.closeLogFile();
 
     m_running = false;
 

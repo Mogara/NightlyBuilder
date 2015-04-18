@@ -1,5 +1,6 @@
 #include "statepackaging.h"
 #include "global.h"
+#include "log.h"
 
 #include <QTimer>
 #include <QDir>
@@ -120,9 +121,14 @@ void NBStatePackaging::processFinished(int exitCode, QProcess::ExitStatus exitSt
     QString stdOut = QString::fromLocal8Bit(p->readAllStandardOutput());
     QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
 
-    // log
-    Q_UNUSED(stdOut); // temp solution
-    Q_UNUSED(stdErr);
+    NBLog logstdOut;
+    logstdOut.openLogFile("7z-StdOut");
+    logstdOut.insertLog(stdOut);
+    logstdOut.closeLogFile();
+    NBLog logstdErr;
+    logstdErr.openLogFile("7z-StdErr");
+    logstdErr.insertLog(stdErr);
+    logstdErr.closeLogFile();
 
     m_running = false;
 

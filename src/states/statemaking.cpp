@@ -1,5 +1,6 @@
 #include "statemaking.h"
 #include "global.h"
+#include "log.h"
 
 #include <QTimer>
 
@@ -112,9 +113,15 @@ void NBStateMaking::processFinished(int exitCode, QProcess::ExitStatus exitStatu
     QString stdOut = QString::fromLocal8Bit(p->readAllStandardOutput());
     QString stdErr = QString::fromLocal8Bit(p->readAllStandardError());
 
-    // log
-    Q_UNUSED(stdOut); // temp solution
-    Q_UNUSED(stdErr);
+
+    NBLog logstdOut;
+    logstdOut.openLogFile("Make-StdOut");
+    logstdOut.insertLog(stdOut);
+    logstdOut.closeLogFile();
+    NBLog logstdErr;
+    logstdErr.openLogFile("Make-StdErr");
+    logstdErr.insertLog(stdErr);
+    logstdErr.closeLogFile();
 
     m_running = false;
 
