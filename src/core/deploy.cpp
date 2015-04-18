@@ -70,9 +70,8 @@ void NBDeployThread::run()
 {
     succeed = true;
 
-    auto writeLog = [](NBLog *logFile, const QString &logContent) -> void {
-        if (logFile != NULL)
-            logFile->insertLog(logContent);
+    auto writeLog = [](NBLog &logFile, const QString &logContent) -> void {
+        logFile.insertLog(logContent);
     };
 
     QDir proj(GlobalConfig::ProjectPath);
@@ -119,6 +118,9 @@ void NBDeployThread::run()
 
     // global result
     bool ok = true;
+
+    NBLog logFile;
+    logFile.openLogFile("Deploy");
 
     // Step 1: copy the exe file
     writeLog(logFile, "Step 1: copy the exe file:");
@@ -201,6 +203,8 @@ void NBDeployThread::run()
         writeLog(logFile, "ok\n");
     else
         writeLog(logFile, "ng\n");
+
+    logFile.closeLogFile();
 
     // Step 6: copy the former log file to deploy folder
     // todo

@@ -1,11 +1,10 @@
 #include "statedeploying.h"
 #include "deploy.h"
-#include "log.h"
 #include "global.h"
 
 #include <QTimer>
 
-NBStateDeploying::NBStateDeploying(QObject *parent) : NBState(parent), m_deploy(NULL), m_waitTimer(NULL), m_logWritter(NULL)
+NBStateDeploying::NBStateDeploying(QObject *parent) : NBState(parent), m_deploy(NULL), m_waitTimer(NULL)
 {
 
 }
@@ -15,11 +14,6 @@ NBStateDeploying::~NBStateDeploying()
     if (m_waitTimer != NULL) {
         m_waitTimer->stop();
         delete m_waitTimer;
-    }
-
-    if (m_logWritter != NULL) {
-        m_logWritter->closeLogFile();
-        delete m_logWritter;
     }
 
     if (m_deploy != NULL) {
@@ -41,9 +35,6 @@ void NBStateDeploying::run()
         emit error();
         return;
     }
-
-    if (m_logWritter != NULL)
-        m_logWritter->closeLogFile();
 
     m_running = true;
     m_isError = false;
@@ -78,13 +69,6 @@ void NBStateDeploying::run()
     m_waitTimer->setInterval(60000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateDeploying::timeout);
 
-    // open log file
-    if (m_logWritter == NULL)
-        m_logWritter = new NBLog;
-
-    m_logWritter->openLogFile("Deploy");
-    m_deploy->logFile = m_logWritter;
-
     m_deploy->start();
 }
 
@@ -114,8 +98,6 @@ void NBStateDeploying::shutUp()
     m_deploy->deleteLater();
     m_deploy = NULL;
 
-    m_logWritter->closeLogFile();
-
     emit stopped();
 }
 
@@ -132,8 +114,6 @@ void NBStateDeploying::deployFinished()
     bool succeed = m_deploy->succeed;
     m_deploy->deleteLater();
     m_deploy = NULL;
-
-    m_logWritter->closeLogFile();
 
     if (succeed) {
         m_running = false;
@@ -157,9 +137,6 @@ void NBStateDeploying::timeout()
 
     if (m_deploy->isRunning())
         m_deploy->terminate();
-
-    m_deploy->logFile = NULL;
-    m_logWritter->closeLogFile();
 
     emit error();
 }

@@ -15,9 +15,6 @@ public:
     void run();
 
     bool succeed;
-
-    NBLog *logFile;
-
 };
 
 #endif // NBDEPLOY_H
