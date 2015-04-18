@@ -207,7 +207,30 @@ void NBDeployThread::run()
     logFile.closeLogFile();
 
     // Step 6: copy the former log file to deploy folder
-    // todo
+    logFile.openLogFile("Deploy-copyLog");
+
+    writeLog(logFile, "Step 6: copy the former log file to deploy folder");
+    ok &= dply.mkdir("BuildLog");
+    QDir logDirtoCopy = dply;
+    ok &= logDirtoCopy.cd("BuildLog");
+
+    static QStringList toCopyLogs;
+    if (toCopyLogs.isEmpty())
+        toCopyLogs << "git-StdOut" << "git-StdErr" << "QMake-StdOut" << "QMake-StdErr" << "Make-StdOut" << "Make-StdErr" << "Deploy";
+
+    QDir logDir(GlobalConfig::LogPath);
+    foreach (const QString &logName, toCopyLogs) {
+        QString filePath = logDir.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");
+        QString toPath = logDirtoCopy.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");
+        ok &= QFile::copy(filePath, toPath);
+    }
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    logFile.closeLogFile();
 
     if (!ok)
         succeed = false;
