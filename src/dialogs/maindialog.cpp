@@ -21,12 +21,12 @@ NBMainDialog::NBMainDialog(QWidget *parent)
 {
     m_layout =  new QVBoxLayout;
     m_pathLineLayout = new QFormLayout;
-    addPathLine(tr("Project Path"), m_projectPathEdit);
-    addPathLine(tr("Build Path"), m_buildPathEdit);
-    addPathLine(tr("Qt Path"), m_qtPathEdit);
-    addPathLine(tr("Deploy Path"), m_deployPathEdit);
-    addPathLine(tr("FTP Path"), m_ftpPathEdit);
-    addPathLine(tr("Log Path"), m_logPathEdit);
+    addPathLine(tr("Project Path"), m_projectPathEdit, "ProjectPath");
+    addPathLine(tr("Build Path"), m_buildPathEdit, "BuildPath");
+    addPathLine(tr("Qt Path"), m_qtPathEdit, "QtPath");
+    addPathLine(tr("Deploy Path"), m_deployPathEdit, "DeployPath");
+    addPathLine(tr("FTP Path"), m_ftpPathEdit, "FtpPath");
+    addPathLine(tr("Log Path"), m_logPathEdit, "LogPath");
 
     m_layout->addLayout(m_pathLineLayout);
 
@@ -62,7 +62,7 @@ void NBMainDialog::closeEvent(QCloseEvent *e)
     QDialog::closeEvent(e);
 }
 
-void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit)
+void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey)
 {
     QHBoxLayout *h = new QHBoxLayout;
 
@@ -76,6 +76,9 @@ void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit)
     h->addWidget(button);
 
     m_pathLineLayout->addRow(name, h);
+
+    if (!settingsKey.isEmpty())
+        edit->setText(NBSetting.value(settingsKey).toString());
 }
 
 void NBMainDialog::showFileDialog()
@@ -91,14 +94,22 @@ void NBMainDialog::showFileDialog()
 
 void NBMainDialog::saveSettings()
 {
-    using namespace GlobalConfig;
+    GlobalConfig::ProjectPath = m_projectPathEdit->text();
+    GlobalConfig::BuildPath = m_buildPathEdit->text();
+    GlobalConfig::QtPath = m_qtPathEdit->text();
+    GlobalConfig::DeployPath = m_deployPathEdit->text();
+    GlobalConfig::FtpPath = m_ftpPathEdit->text();
+    GlobalConfig::LogPath = m_logPathEdit->text();
 
-    ProjectPath = m_projectPathEdit->text();
-    BuildPath = m_buildPathEdit->text();
-    QtPath = m_qtPathEdit->text();
-    DeployPath = m_deployPathEdit->text();
-    FtpPath = m_ftpPathEdit->text();
-    LogPath = m_logPathEdit->text();
+#define SAVE_TO_CONFIG(name) NBSetting.setValue(#name, GlobalConfig::name)
+    SAVE_TO_CONFIG(ProjectPath);
+    SAVE_TO_CONFIG(BuildPath);
+    SAVE_TO_CONFIG(QtPath);
+    SAVE_TO_CONFIG(DeployPath);
+    SAVE_TO_CONFIG(FtpPath);
+    SAVE_TO_CONFIG(LogPath);
+#undef SAVE_TO_CONFIG
+
 }
 
 void NBMainDialog::startOrStopRunning()

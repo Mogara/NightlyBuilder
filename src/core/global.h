@@ -2,24 +2,29 @@
 #define GLOBAL_H
 
 #include <QString>
+#include <QSettings>
 
-namespace GlobalConfig
+class GlobalConfig : public QSettings
 {
-    extern const QString DefaultBuildPath;
-    extern const QString DefaultDeployPath;
+public:
+    GlobalConfig();
+    void init();
 
-    extern QString ProjectPath;
-    extern QString BuildPath;
-    extern QString QtPath;
-    extern QString DeployPath;
-    extern QString FtpPath;
-    extern QString LogPath;
-}
+    static QString ProjectPath;
+    static QString BuildPath;
+    static QString QtPath;
+    static QString DeployPath;
+    static QString FtpPath;
+    static QString LogPath;
+
+};
 
 namespace GlobalMethod
 {
     void crash();
 }
+
+extern GlobalConfig NBSetting;
 
 #endif // GLOBAL_H
 

@@ -33,7 +33,7 @@ private:
     QLineEdit *m_logPathEdit;
     QHash<QPushButton *, QLineEdit *> m_buttonEditPairs;
 
-    void addPathLine(const QString &name, QLineEdit *&edit);
+    void addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey = QString());
 
 private slots:
     void showFileDialog();

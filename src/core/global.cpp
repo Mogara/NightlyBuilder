@@ -1,20 +1,33 @@
-
-
 #include "global.h"
 
 #include <QMessageBox>
 
-namespace GlobalConfig
-{
-    const QString DefaultBuildPath = "../build-%1-%2";
-    const QString DefaultDeployPath = "../%1-nightly-%2";
+QString GlobalConfig::ProjectPath;
+QString GlobalConfig::BuildPath;
+QString GlobalConfig::QtPath;
+QString GlobalConfig::DeployPath;
+QString GlobalConfig::FtpPath;
+QString GlobalConfig::LogPath;
 
-    QString ProjectPath = "";
-    QString BuildPath = "";
-    QString QtPath = "";
-    QString DeployPath = "";
-    QString FtpPath = "";
-    QString LogPath = "";
+GlobalConfig NBSetting;
+
+GlobalConfig::GlobalConfig() : QSettings("MogaraNightlyBuilder", QSettings::IniFormat)
+{
+
+}
+
+void GlobalConfig::init()
+{
+#define LOAD_STRING_SETTING(name) name = value(#name).toString()
+
+    LOAD_STRING_SETTING(ProjectPath);
+    LOAD_STRING_SETTING(BuildPath);
+    LOAD_STRING_SETTING(QtPath);
+    LOAD_STRING_SETTING(DeployPath);
+    LOAD_STRING_SETTING(FtpPath);
+    LOAD_STRING_SETTING(LogPath);
+
+#undef LOAD_STRING_SETTING
 }
 
 void GlobalMethod::crash()
