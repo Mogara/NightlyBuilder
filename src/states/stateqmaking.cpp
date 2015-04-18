@@ -67,9 +67,9 @@ void NBStateQMaking::run()
     m_qmake->setProgram("qmake");
 
     QDir buildDir(GlobalConfig::BuildPath);
-    QString relativePath = buildDir.relativeFilePath(GlobalConfig::DeployPath);
+    QString relativePath = buildDir.relativeFilePath(GlobalConfig::ProjectPath);
 
-    m_qmake->setArguments(QStringList() << "\"CONFIG+=buildbot\"" << relativePath);
+    m_qmake->setArguments(QStringList() << "CONFIG+=buildbot" << relativePath);
 
     connect(m_qmake, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStateQMaking::processFinished);
     connect(m_qmake, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStateQMaking::processError);
