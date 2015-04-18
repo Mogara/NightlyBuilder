@@ -2,13 +2,13 @@
 #define MAINDIALOG_H
 
 #include <QDialog>
+#include "statemanager.h"
 
 class QLineEdit;
 class QVBoxLayout;
 class QFormLayout;
 class QCloseEvent;
-
-class NBStateManager;
+class QLabel;
 
 class NBMainDialog : public QDialog
 {
@@ -45,12 +45,14 @@ private slots:
     void runFinishedOnce();
     void runStopped();
     void runError();
+    void stateChanged(NBStateManager::State s);
 
 private:
     QTimer *m_t;
     NBStateManager *m_nbsm;
 
     bool m_stopping;
+    QLabel *m_stateLbl;
 
 protected:
     void closeEvent(QCloseEvent *);

@@ -1,6 +1,6 @@
 #include "maindialog.h"
 #include "global.h"
-#include "statemanager.h"
+//#include "statemanager.h"
 
 #include <QFileDialog>
 #include <QLabel>
@@ -31,7 +31,8 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     m_layout->addLayout(m_pathLineLayout);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addStretch();
+    m_stateLbl = new QLabel;
+    buttonLayout->addWidget(m_stateLbl);
     m_runBtn = new QPushButton(tr("Run!"));
     buttonLayout->addWidget(m_runBtn);
     connect(m_runBtn, &QPushButton::clicked, this, &NBMainDialog::startOrStopRunning);
@@ -175,6 +176,44 @@ void NBMainDialog::runError()
 {
     // deal as normal finished
     runFinishedOnce();
+}
+
+void NBMainDialog::stateChanged(NBStateManager::State s)
+{
+    QString toDisplay;
+    switch (s) {
+    case NBStateManager::Pulling:
+        toDisplay = "Pulling";
+        break;
+    case NBStateManager::GeneratingBotVersionCpp:
+        toDisplay = "Generating bot_version.cpp";
+        break;
+    case NBStateManager::QMaking:
+        toDisplay = "QMaking";
+        break;
+    case NBStateManager::Making:
+        toDisplay = "Making";
+        break;
+    case NBStateManager::Deploying:
+        toDisplay = "Deploying";
+        break;
+    case NBStateManager::Packaging:
+        toDisplay = "Packaging";
+        break;
+    case NBStateManager::Uploading:
+        toDisplay = "Uploading";
+        break;
+    case NBStateManager::Finished:
+        toDisplay = "Finished";
+        break;
+    case NBStateManager::Error:
+        toDisplay = "Error";
+        break;
+    default:
+        toDisplay = "Unknown";
+    }
+
+    m_stateLbl->setWindowTitle(toDisplay);
 }
 
 void NBMainDialog::runFinishedOnce()

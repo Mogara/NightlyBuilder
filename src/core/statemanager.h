@@ -37,6 +37,7 @@ signals:
     void finished();
     void error();
     void stopped();
+    void state_changed();
 
 public slots:
     void start();
@@ -51,10 +52,15 @@ private:
     QMap<State, NBState *> m_stateMap;
     State m_currentState;
     bool m_stopping;
+
+    void setCurrentState(State s);
 };
 
 NBStateManager::State operator++(NBStateManager::State &arg);
 
 NBStateManager::State operator++(NBStateManager::State &arg, int);
+
+NBStateManager::State operator+(const NBStateManager::State &arg1, int arg2);
+
 
 #endif // NBSTATEMANAGER_H

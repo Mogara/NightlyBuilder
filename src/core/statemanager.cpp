@@ -16,6 +16,13 @@ NBStateManager::State operator++(NBStateManager::State &arg, int /*rightOperator
     return s;
 }
 
+NBStateManager::State operator+(const NBStateManager::State &arg1, int arg2)
+{
+    int _arg1 = arg1;
+    _arg1 += arg2;
+    return static_cast<NBStateManager::State>(_arg1);
+}
+
 NBStateManager::NBStateManager(QObject *parent) : QObject(parent), m_currentState(NonState), m_stopping(false)
 {
     for (State state = NonState; state <= Finished; ++state) {
@@ -41,11 +48,11 @@ void NBStateManager::start()
 {
     m_stopping = false;
 
-    m_currentState = Pulling;
+    setCurrentState(Pulling);
     NBState *s = m_stateMap[m_currentState];
 
     if (s == NULL) {
-        m_currentState = Error;
+        setCurrentState(Error);
         emit error();
         return;
     }
@@ -78,13 +85,13 @@ void NBStateManager::oneFinished()
         return;
     }
 
-    ++m_currentState;
+    setCurrentState(m_currentState + 1);
     if (m_currentState == Finished)
         emit finished();
     else {
         NBState *s = m_stateMap[m_currentState];
         if (s == NULL) {
-            m_currentState = Error;
+            setCurrentState(Error);
             emit error();
             return;
         }
@@ -106,7 +113,7 @@ void NBStateManager::oneError()
 
     NBState *s = qobject_cast<NBState *>(sender());
     if (s == NULL) {
-        m_currentState = Error;
+        setCurrentState(Error);
         emit error();
         return;
     }
@@ -114,7 +121,7 @@ void NBStateManager::oneError()
     if (s->retryTimes() < retryLimit)
         s->retry();
     else {
-        m_currentState = Error;
+        setCurrentState(Error);
         emit error();
     }
 }
@@ -126,6 +133,16 @@ void NBStateManager::oneFatal()
         return;
     }
 
-    m_currentState = Error;
+    setCurrentState(Error);
     emit error();
+}
+
+void NBStateManager::setCurrentState(State s)
+{
+    State former = m_currentState;
+    if (former == s)
+        return;
+
+    m_currentState = s;
+    emit state_changed();
 }
