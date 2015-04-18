@@ -37,7 +37,7 @@ signals:
     void finished();
     void error();
     void stopped();
-    void state_changed();
+    void state_changed(State);
 
 public slots:
     void start();

@@ -144,5 +144,5 @@ void NBStateManager::setCurrentState(State s)
         return;
 
     m_currentState = s;
-    emit state_changed();
+    emit state_changed(m_currentState);
 }

@@ -132,8 +132,9 @@ void NBMainDialog::startOrStopRunning()
         connect(m_nbsm, &NBStateManager::finished, this, &NBMainDialog::runFinishedOnce);
         connect(m_nbsm, &NBStateManager::error, this, &NBMainDialog::runError);
         connect(m_nbsm, &NBStateManager::stopped, this, &NBMainDialog::runStopped);
+        connect(m_nbsm, &NBStateManager::state_changed, this, &NBMainDialog::stateChanged);
 
-        m_runBtn->setWindowTitle(tr("Stop!"));
+        m_runBtn->setText(tr("Stop!"));
 
         startCompiling();
     }
@@ -152,7 +153,7 @@ void NBMainDialog::runStopped()
     m_nbsm->deleteLater();
     m_nbsm = NULL;
 
-    m_runBtn->setWindowTitle(tr("Run"));
+    m_runBtn->setText(tr("Run"));
 
     foreach (QPushButton *btn, m_buttonEditPairs.keys())
         btn->setEnabled(true);
@@ -213,7 +214,7 @@ void NBMainDialog::stateChanged(NBStateManager::State s)
         toDisplay = "Unknown";
     }
 
-    m_stateLbl->setWindowTitle(toDisplay);
+    m_stateLbl->setText(toDisplay);
 }
 
 void NBMainDialog::runFinishedOnce()
