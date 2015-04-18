@@ -133,6 +133,8 @@ void NBDeployThread::run()
         QString l = QString::fromUtf8(dplyFile.readLine());
 #endif
         l = l.trimmed();
+        if (l.isEmpty())
+            continue;
         if (l.startsWith('<') && l.endsWith('>')) {
             l = l.mid(1, l.length() - 2);
             listGetter(l);
@@ -158,6 +160,11 @@ void NBDeployThread::run()
     else
         writeLog(logFile, "ng\n");
 
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
     // Step 2: copy the folders from ProjectPath to DeployPath
     writeLog(logFile, "Step 2: copy the folders from ProjectPath to DeployPath:");
     foreach (const QString &f, folderList) {
@@ -170,6 +177,11 @@ void NBDeployThread::run()
         writeLog(logFile, "ok\n");
     else
         writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
 
     // Step 3: copy the files from ProjectPath to DeployPath
     // reminder: there is some items that contains "->" substring in the folder list, so distinguish it
@@ -194,6 +206,11 @@ void NBDeployThread::run()
     else
         writeLog(logFile, "ng\n");
 
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
     // Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath
     writeLog(logFile, "Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath:");
     QDir qt(GlobalConfig::QtPath);
@@ -208,6 +225,11 @@ void NBDeployThread::run()
         writeLog(logFile, "ok\n");
     else
         writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
 
     // Step 5: copy the Qt plugins to DeployPath
     // reminder: Remove the debug version of plugins
@@ -227,6 +249,11 @@ void NBDeployThread::run()
         writeLog(logFile, "ok\n");
     else
         writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
 
     logFile.closeLogFile();
 
