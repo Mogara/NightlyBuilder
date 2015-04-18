@@ -4,7 +4,7 @@
 
 #include <QTimer>
 
-NBStateUploading::NBStateUploading(QObject *parent) : NBState(parent), m_waitTimer(NULL), m_running(false)
+NBStateUploading::NBStateUploading(QObject *parent) : NBState(parent), m_upload(NULL), m_waitTimer(NULL), m_running(false)
 {
 
 }
