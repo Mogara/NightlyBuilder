@@ -5,6 +5,16 @@
 #include <QDate>
 #include <QDir>
 
+#define USE_FSTREAM
+
+#ifdef USE_FSTREAM
+#include <fstream>
+#include <string>
+using std::wfstream;
+using std::wstring;
+using std::string;
+#endif
+
 NBDeployThread::NBDeployThread() : succeed(true)
 {
 
@@ -75,11 +85,20 @@ void NBDeployThread::run()
     };
 
     QDir proj(GlobalConfig::ProjectPath);
-    QFile dplyFile(proj.absoluteFilePath("bot.dply"));
+    QString dplyFilePath = proj.absoluteFilePath("bot.dply");
+#ifdef USE_FSTREAM
+    QFileInfo fileInfo(dplyFilePath);
+    string std_path = QDir::toNativeSeparators(fileInfo.canonicalFilePath()).toStdString();
+    wfstream dplyFile;
+    dplyFile.open(std_path);
+#else
+    QFile dplyFile(dplyFilePath);
+#endif
     try {
-        if (!dplyFile.open(QIODevice::ReadOnly))
+#ifndef USE_FSTREAM
+        if (!dplyFile.open(QIODevice::ReadOnly | QIODevice::Text))
             throw 1;
-
+#endif
         if (!proj.mkpath(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd")))
             throw 2;
     }
@@ -105,9 +124,14 @@ void NBDeployThread::run()
         else
             currentList = NULL;
     };
-
+#ifdef USE_FSTREAM
+    wstring __line;
+    while (getline(dplyFile, __line)) {
+        QString l = QString::fromStdWString(__line);
+#else
     while (dplyFile.canReadLine()) {
         QString l = QString::fromUtf8(dplyFile.readLine());
+#endif
         l = l.trimmed();
         if (l.startsWith('<') && l.endsWith('>')) {
             l = l.mid(1, l.length() - 2);
