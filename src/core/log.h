@@ -1,10 +1,14 @@
 #ifndef NBLOG_H
 #define NBLOG_H
 
+//#define NBLOG_THREAD_SUPPORT
+
 #include <QObject>
 
 class QIODevice;
+#ifdef NBLOG_THREAD_SUPPORT
 class QThread;
+#endif
 
 class NBLog : public QObject
 {
@@ -25,7 +29,9 @@ public slots:
 private:
     bool m_opened;
     QIODevice *m_logFile;
+#ifdef NBLOG_THREAD_SUPPORT
     QThread *m_logThread;
+#endif
 
 };
 
