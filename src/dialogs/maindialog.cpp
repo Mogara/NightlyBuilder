@@ -239,8 +239,7 @@ void NBMainDialog::runFinishedOnce()
     QDate d = timeStartCompile.date();
     d.addDays(1);
     QDateTime nextTimeStartCompile = QDateTime(d, timeStartCompile.time());
-    //m_t->setInterval(timeFinishCompile.secsTo(nextTimeStartCompile) * 1000);
-    m_t->setInterval(120000); // debug for auto re-build
+    m_t->setInterval(timeFinishCompile.secsTo(nextTimeStartCompile) * 1000);
     m_t->setSingleShot(true);
     connect(m_t, &QTimer::timeout, this, &NBMainDialog::startCompiling);
     m_t->start();
