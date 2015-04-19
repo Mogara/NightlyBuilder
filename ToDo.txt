@@ -1,33 +1,49 @@
 1、各State完善：
     StatePulling：启动git pull，由于是bot，所以使用https连接。
-        状态0410：基本完成，未测试
+        状态0420：已发布
     StateGeneratingBotVersionCpp：使用线程，复制一份src/bot_version.cpb->src/bot_version.cpp，替换%date为当前日期
-        状态0410：更改为直接在主线程弄，基本完成，未测试
+        状态0420：已发布
     StateQMaking：启动QMake，注意使用ShadowBuild，文件夹名要包含日期，加入CONFIG+=buildbot
-        状态0410：基本完成，未测试
+        状态0420：已发布
     StateMaking，启动make，make -f ./MakeFile.release
-        状态0410：基本完成，未测试
+        状态0420：已发布
     StateDeploying：准备写一个文件专门用于deploy，这个文件指定将要拷贝的文件和文件夹的名称以及来源。
-        状态0410：基本完成，未测试
+        状态0420：已发布
     StatePackage：启动7z，进行压缩。注意要把pull和编译日志压入文件。
-        状态0413：基本完成，未测试，未整合编译日志功能
+        状态0420：已发布
     StateUploading：上传服务器。（暂时是相同电脑兼职制作FTP服务器，准备使用补助再弄一个服务器，要求是网络带宽大，至少10M）
-        状态0411：开了个新Thread，到头来也就是个copy&paste…………基本完成，未测试
+        状态0420：已发布，准备换用QNetworkAccessManager做FTP，不过由于是GPL协议所以用户名密码要开源……头疼ing
 
     全State：加入停止功能
-        状态0413：基本完成，未测试
+        状态0420：已发布
     全State：加入编译日志功能、
-        状态0413：已做完，未整合
+        状态0420：已发布
 
 2、界面制作：
     MainDialog：管理全局设置等。
-        状态0413：。。。
+        状态0420：已发布
     RunDialog：管理运行进度和每夜版发布频率（也就是Timer）
-        状态0413：未着手
+        状态0420：已删除，功能整合进MainDialog
 
 3、全局功能：
     GlobalConfig：除了Path外，还要管理Timer等
-        状态0413：。。。
+        状态0420：已发布，Timer功能删除，改为直接在MainDialog里制作。
     Log：主要用于编译日志，程序GUI日志看情况也可以在这里记录
-        状态0413：做成了个系统，不知道应该如何去使用它……
+        状态0420：已发布，不过未完善，现在只有在成功时才会输出Log，受限于各个State，
+
+0420发布v1.0.0：
+    只有最基本功能…………
+
+下版本设想：
+1、各State继续完善：
+    封装QProcess与继承QThread的处理，目前对QProcess和QThread的操作太多太复杂，而且都在各个State中占据了很大一部分篇幅，所以准备使用一个类来封装它。而且准备实现实时输出功能，包括到界面和到Log。
+        状态0420：0
+
+2、界面制作：
+    由于QProcess和QThread要封装并实现实时输出，所以界面上也要配置实时输出的控件。
+        状态0420：0
+
+3、全局功能
+    Error后自动发送电子邮件通知
+        状态0420：0，不过QSanSMTPClient貌似很不顺利的样子，这个程序使用SMTP真的大丈夫？
 
