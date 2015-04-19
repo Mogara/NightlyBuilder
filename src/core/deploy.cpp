@@ -84,6 +84,21 @@ void NBDeployThread::run()
         logFile.insertLog(logContent);
     };
 
+    // Step 0: delete the old files and folders.
+    // This step isn't recorded into Log files, and we don't concern whether it succeeded or not.
+
+    QDir globalDply = GlobalConfig::DeployPath;
+    QStringList existingFileList = globalDply.entryList(QDir::Files);
+    foreach (const QString &f, existingFileList)
+        QFile::remove(globalDply.absoluteFilePath(f));
+
+    QStringList existingFolderList = globalDply.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    foreach (const QString f, existingFolderList) {
+        QDir to_delete = globalDply;
+        to_delete.cd(f);
+        to_delete.removeRecursively();
+    }
+
     QDir proj(GlobalConfig::ProjectPath);
     QString dplyFilePath = proj.absoluteFilePath("bot.dply");
 #ifdef USE_FSTREAM
