@@ -28,7 +28,8 @@ SOURCES += \
     src/core/deploy.cpp \
     src/core/upload.cpp \
     src/core/log.cpp \
-    src/core/global.cpp
+    src/core/global.cpp \
+    src/operation/operation.cpp
 
 HEADERS  += \
     src/dialogs/maindialog.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     src/core/deploy.h \
     src/core/upload.h \
     src/core/log.h \
-    src/core/global.h
+    src/core/global.h \
+    src/operation/operation.h
 
 INCLUDEPATH += \
     src/states \
