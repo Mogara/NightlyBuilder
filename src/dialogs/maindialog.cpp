@@ -17,7 +17,7 @@ namespace {
 }
 
 NBMainDialog::NBMainDialog(QWidget *parent)
-    : QDialog(parent), m_t(NULL), m_nbsm(NULL), m_stopping(false)
+    : QDialog(parent), m_t(NULL), m_nbsm(NULL), m_stopping(false), m_compileCountdown(0)
 {
     m_layout =  new QVBoxLayout;
     m_pathLineLayout = new QFormLayout;
@@ -239,8 +239,22 @@ void NBMainDialog::runFinishedOnce()
     QDate d = timeStartCompile.date();
     d.addDays(1);
     QDateTime nextTimeStartCompile = QDateTime(d, timeStartCompile.time());
-    m_t->setInterval(timeFinishCompile.secsTo(nextTimeStartCompile) * 1000);
-    m_t->setSingleShot(true);
-    connect(m_t, &QTimer::timeout, this, &NBMainDialog::startCompiling);
+    m_compileCountdown = timeFinishCompile.secsTo(nextTimeStartCompile);
+    m_t->setInterval(1000);
+    m_t->setSingleShot(false);
+    connect(m_t, &QTimer::timeout, this, &NBMainDialog::compileCountdown);
     m_t->start();
+}
+
+void NBMainDialog::compileCountdown()
+{
+    --m_compileCountdown;
+
+    QString s = tr("Remaining %1 seconds to next compile").arg(QString::number(m_compileCountdown));
+    m_stateLbl->setText(s);
+
+    if (m_compileCountdown == 0) {
+        m_t->stop();
+        startCompiling();
+    }
 }

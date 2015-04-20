@@ -47,12 +47,16 @@ private slots:
     void runError();
     void stateChanged(NBStateManager::State s);
 
+    void compileCountdown();
+
 private:
     QTimer *m_t;
     NBStateManager *m_nbsm;
 
     bool m_stopping;
     QLabel *m_stateLbl;
+
+    int m_compileCountdown;
 
 protected:
     void closeEvent(QCloseEvent *);
