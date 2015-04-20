@@ -237,7 +237,7 @@ void NBMainDialog::runFinishedOnce()
 
     QDateTime timeFinishCompile = QDateTime::currentDateTime();
     QDate d = timeStartCompile.date();
-    d.addDays(1);
+    d = d.addDays(1);
     QDateTime nextTimeStartCompile = QDateTime(d, timeStartCompile.time());
     m_compileCountdown = timeFinishCompile.secsTo(nextTimeStartCompile);
     m_t->setInterval(1000);
