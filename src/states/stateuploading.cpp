@@ -1,5 +1,5 @@
 #include "stateuploading.h"
-#include "upload.h"
+#include "uploadthread.h"
 #include "global.h"
 
 #include <QTimer>

@@ -1,5 +1,5 @@
-#ifndef NBUPLOAD_H
-#define NBUPLOAD_H
+#ifndef NBUPLOADTHREAD_H
+#define NBUPLOADTHREAD_H
 
 #include <QThread>
 
@@ -15,4 +15,4 @@ public:
     void run();
 };
 
-#endif // NBUPLOAD_H
+#endif // NBUPLOADTHREAD_H

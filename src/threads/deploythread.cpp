@@ -1,4 +1,4 @@
-#include "deploy.h"
+#include "deploythread.h"
 #include "global.h"
 #include "log.h"
 

@@ -1,5 +1,5 @@
-#ifndef MAINDIALOG_H
-#define MAINDIALOG_H
+#ifndef NBMAINDIALOG_H
+#define NBMAINDIALOG_H
 
 #include <QDialog>
 #include "statemanager.h"

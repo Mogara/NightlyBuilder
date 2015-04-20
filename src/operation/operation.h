@@ -1,5 +1,5 @@
-#ifndef OPERATION_H
-#define OPERATION_H
+#ifndef NBOPERATION_H
+#define NBOPERATION_H
 
 #include <QObject>
 

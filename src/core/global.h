@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H
-#define GLOBAL_H
+#ifndef NBGLOBAL_H
+#define NBGLOBAL_H
 
 #include <QString>
 #include <QSettings>

@@ -1,5 +1,5 @@
-#ifndef NBDEPLOY_H
-#define NBDEPLOY_H
+#ifndef NBDEPLOYTHREAD_H
+#define NBDEPLOYTHREAD_H
 
 #include <QThread>
 
@@ -17,4 +17,4 @@ public:
     bool succeed;
 };
 
-#endif // NBDEPLOY_H
+#endif // NBDEPLOYTHREAD_H

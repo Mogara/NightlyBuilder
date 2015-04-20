@@ -1,4 +1,4 @@
-#include "upload.h"
+#include "uploadthread.h"
 #include "global.h"
 
 #include <QDir>

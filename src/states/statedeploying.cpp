@@ -1,5 +1,5 @@
 #include "statedeploying.h"
-#include "deploy.h"
+#include "deploythread.h"
 #include "global.h"
 
 #include <QTimer>
