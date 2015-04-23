@@ -27,7 +27,6 @@ SOURCES += \
     src/states/statefactory.cpp \
     src/core/log.cpp \
     src/core/global.cpp \
-    src/operation/operation.cpp \
     src/threads/deploythread.cpp \
     src/threads/uploadthread.cpp
 
@@ -45,7 +44,6 @@ HEADERS  += \
     src/states/statefactory.h \
     src/core/log.h \
     src/core/global.h \
-    src/operation/operation.h \
     src/threads/deploythread.h \
     src/threads/uploadthread.h
 
@@ -53,7 +51,6 @@ INCLUDEPATH += \
     src/states \
     src/dialogs \
     src/core \
-    src/threads \
-    src/operation
+    src/threads
 
 
