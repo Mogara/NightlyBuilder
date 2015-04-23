@@ -23,6 +23,10 @@ signals:
     void error();
     void fatal();
     void stopped();
+    void output1(const QByteArray &);
+    void output2(const QByteArray &);
+    void output3(const QByteArray &);
+
 
 private:
     int m_retryTimes;

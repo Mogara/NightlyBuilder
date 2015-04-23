@@ -50,6 +50,9 @@ public slots:
 
 private:
     QMap<State, NBState *> m_stateMap;
+    static const QMap<State, QString> m_stateOutput1LogfileMap;
+    static const QMap<State, QString> m_stateOutput2LogfileMap;
+    static const QMap<State, QString> m_stateOutput3LogfileMap;
     State m_currentState;
     bool m_stopping;
 
