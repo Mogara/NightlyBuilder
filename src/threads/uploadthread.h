@@ -2,6 +2,32 @@
 #define NBUPLOADTHREAD_H
 
 #include <QThread>
+#include <QString>
+
+class QNetworkAccessManager;
+class QUrl;
+
+class NBFtpUpload : public QObject
+{
+    Q_OBJECT
+
+public:
+    NBFtpUpload(QObject *parent = NULL);
+    ~NBFtpUpload();
+
+    void setUserName(const QString &username);
+    void setPassWord(const QString &password);
+
+    void start();
+
+signals:
+    void finished();
+
+private:
+    QNetworkAccessManager *m_man;
+    QUrl *m_url;
+    QString m_filePath;
+};
 
 
 class NBUploadThread : public QThread
@@ -13,6 +39,9 @@ public:
     ~NBUploadThread();
 
     void run();
+
+private slots:
+    void uploadFinished();
 };
 
 #endif // NBUPLOADTHREAD_H
