@@ -17,6 +17,9 @@ public:
     static QString FtpPath;
     static QString LogPath;
 
+    static QString FtpUserName;
+    static QString FtpPassword;
+
 };
 
 namespace GlobalMethod

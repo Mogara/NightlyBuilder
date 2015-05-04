@@ -15,9 +15,6 @@ public:
     NBFtpUpload(QObject *parent = NULL);
     ~NBFtpUpload();
 
-    void setUserName(const QString &username);
-    void setPassWord(const QString &password);
-
     void start();
 
 signals:

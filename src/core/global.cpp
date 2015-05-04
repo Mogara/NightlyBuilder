@@ -8,6 +8,8 @@ QString GlobalConfig::QtPath;
 QString GlobalConfig::DeployPath;
 QString GlobalConfig::FtpPath;
 QString GlobalConfig::LogPath;
+QString GlobalConfig::FtpUserName = "anonymous";
+QString GlobalConfig::FtpPassword = "User@Mogara.org";
 
 GlobalConfig NBSetting;
 
@@ -26,6 +28,8 @@ void GlobalConfig::init()
     LOAD_STRING_SETTING(DeployPath);
     LOAD_STRING_SETTING(FtpPath);
     LOAD_STRING_SETTING(LogPath);
+    LOAD_STRING_SETTING(FtpUserName);
+    LOAD_STRING_SETTING(FtpPassword);
 
 #undef LOAD_STRING_SETTING
 }

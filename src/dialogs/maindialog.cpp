@@ -25,8 +25,10 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     addPathLine(tr("Build Path"), m_buildPathEdit, "BuildPath");
     addPathLine(tr("Qt Path"), m_qtPathEdit, "QtPath");
     addPathLine(tr("Deploy Path"), m_deployPathEdit, "DeployPath");
-    addPathLine(tr("FTP Path"), m_ftpPathEdit, "FtpPath");
     addPathLine(tr("Log Path"), m_logPathEdit, "LogPath");
+    addPathLine(tr("FTP Path"), m_ftpPathEdit, "FtpPath");
+    addPathLine(tr("FTP Username"), m_ftpUserNameEdit, "FtpUserName", false);
+    addPathLine(tr("Ftp Password"), m_ftpPasswordEdit, "FtpPassword", false);
 
     m_layout->addLayout(m_pathLineLayout);
 
@@ -62,18 +64,20 @@ void NBMainDialog::closeEvent(QCloseEvent *e)
     QDialog::closeEvent(e);
 }
 
-void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey)
+void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey, bool needBrowse)
 {
     QHBoxLayout *h = new QHBoxLayout;
 
     edit = new QLineEdit;
-
-    QPushButton *button = new QPushButton(tr("Browse..."));
-    m_buttonEditPairs.insert(button, edit);
-    connect(button, &QPushButton::released, this, &NBMainDialog::showFileDialog);
-
     h->addWidget(edit);
-    h->addWidget(button);
+
+    if (needBrowse) {
+        QPushButton *button = new QPushButton(tr("Browse..."));
+        m_buttonEditPairs.insert(button, edit);
+        connect(button, &QPushButton::released, this, &NBMainDialog::showFileDialog);
+        h->addWidget(button);
+    } else
+        m_noButtonLineEdits << edit;
 
     m_pathLineLayout->addRow(name, h);
 
@@ -100,6 +104,8 @@ void NBMainDialog::saveSettings()
     GlobalConfig::DeployPath = m_deployPathEdit->text();
     GlobalConfig::FtpPath = m_ftpPathEdit->text();
     GlobalConfig::LogPath = m_logPathEdit->text();
+    GlobalConfig::FtpUserName = m_ftpUserNameEdit->text();
+    GlobalConfig::FtpPassword = m_ftpPasswordEdit->text();
 
 #define SAVE_TO_CONFIG(name) NBSetting.setValue(#name, GlobalConfig::name)
     SAVE_TO_CONFIG(ProjectPath);
@@ -108,6 +114,8 @@ void NBMainDialog::saveSettings()
     SAVE_TO_CONFIG(DeployPath);
     SAVE_TO_CONFIG(FtpPath);
     SAVE_TO_CONFIG(LogPath);
+    SAVE_TO_CONFIG(FtpUserName);
+    SAVE_TO_CONFIG(FtpPassword);
 #undef SAVE_TO_CONFIG
 
 }
@@ -135,6 +143,9 @@ void NBMainDialog::startOrStopRunning()
             btn->setEnabled(false);
         foreach (QLineEdit *edit, m_buttonEditPairs)
             edit->setEnabled(false);
+        foreach (QLineEdit *edit, m_noButtonLineEdits)
+            edit->setEnabled(false);
+
         m_applyBtn->setEnabled(false);
 
         saveSettings(); // we should ask for save the changes instead of invoke this method automaticially.
@@ -169,6 +180,8 @@ void NBMainDialog::runStopped()
     foreach (QPushButton *btn, m_buttonEditPairs.keys())
         btn->setEnabled(true);
     foreach (QLineEdit *edit, m_buttonEditPairs)
+        edit->setEnabled(true);
+    foreach (QLineEdit *edit, m_noButtonLineEdits)
         edit->setEnabled(true);
     m_applyBtn->setEnabled(true);
 }

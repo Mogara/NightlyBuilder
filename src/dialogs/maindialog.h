@@ -31,9 +31,12 @@ private:
     QLineEdit *m_deployPathEdit;
     QLineEdit *m_ftpPathEdit;
     QLineEdit *m_logPathEdit;
+    QLineEdit *m_ftpUserNameEdit;
+    QLineEdit *m_ftpPasswordEdit;
     QHash<QPushButton *, QLineEdit *> m_buttonEditPairs;
+    QList<QLineEdit *> m_noButtonLineEdits;
 
-    void addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey = QString());
+    void addPathLine(const QString &name, QLineEdit *&edit, const QString &settingsKey = QString(), bool needBrowse = true);
 
 private slots:
     void showFileDialog();

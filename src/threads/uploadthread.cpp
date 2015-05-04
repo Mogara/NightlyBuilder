@@ -21,6 +21,8 @@ NBFtpUpload::NBFtpUpload(QObject *parent) : QObject(parent)
     uploadUrl.append(filename);
 
     m_url = new QUrl(uploadUrl);
+    m_url->setUserName(GlobalConfig::FtpUserName);
+    m_url->setPassword(GlobalConfig::FtpPassword);
 
     m_filePath = QDir(GlobalConfig::DeployPath).absoluteFilePath(filename);
 }
@@ -28,16 +30,6 @@ NBFtpUpload::NBFtpUpload(QObject *parent) : QObject(parent)
 NBFtpUpload::~NBFtpUpload()
 {
     delete m_url;
-}
-
-void NBFtpUpload::setUserName(const QString &username)
-{
-    m_url->setUserName(username);
-}
-
-void NBFtpUpload::setPassWord(const QString &password)
-{
-    m_url->setPassword(password);
 }
 
 void NBFtpUpload::start()
@@ -74,11 +66,7 @@ void NBUploadThread::run()
         QFile::copy(dplyDir.absoluteFilePath(fileName), ftpDir.absoluteFilePath(fileName));
     } else {
         NBFtpUpload *upload = new NBFtpUpload(this);
-        upload->setUserName("Mogara");
-        upload->setPassWord("Mogara233");
-
         connect(upload, &NBFtpUpload::finished, this, &NBUploadThread::uploadFinished);
-
         upload->start();
 
         exec();
@@ -87,5 +75,6 @@ void NBUploadThread::run()
 
 void NBUploadThread::uploadFinished()
 {
+    delete sender();
     exit(0);
 }
