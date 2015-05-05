@@ -7,6 +7,7 @@ using std::pair;
 const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput1LogfileMap = {
     std::pair<NBStateManager::State, QString>(NBStateManager::Pulling                 , "git-stdOut"),
     std::pair<NBStateManager::State, QString>(NBStateManager::GeneratingBotVersionCpp , ""),
+    std::pair<NBStateManager::State, QString>(NBStateManager::Cleaning                , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::QMaking                 , "qmake-stdOut"),
     std::pair<NBStateManager::State, QString>(NBStateManager::Making                  , "make-stdOut"),
     std::pair<NBStateManager::State, QString>(NBStateManager::Deploying               , "deploy-log1"),
@@ -16,6 +17,7 @@ const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput1Logfile
 const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput2LogfileMap = {
     std::pair<NBStateManager::State, QString>(NBStateManager::Pulling                 , "git-stdErr"),
     std::pair<NBStateManager::State, QString>(NBStateManager::GeneratingBotVersionCpp , ""),
+    std::pair<NBStateManager::State, QString>(NBStateManager::Cleaning                , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::QMaking                 , "qmake-stdErr"),
     std::pair<NBStateManager::State, QString>(NBStateManager::Making                  , "make-stdErr"),
     std::pair<NBStateManager::State, QString>(NBStateManager::Deploying               , "deploy-log2"),
@@ -25,6 +27,7 @@ const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput2Logfile
 const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput3LogfileMap = {
     std::pair<NBStateManager::State, QString>(NBStateManager::Pulling                 , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::GeneratingBotVersionCpp , ""),
+    std::pair<NBStateManager::State, QString>(NBStateManager::Cleaning                , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::QMaking                 , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::Making                  , ""),
     std::pair<NBStateManager::State, QString>(NBStateManager::Deploying               , ""),

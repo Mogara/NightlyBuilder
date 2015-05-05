@@ -1,6 +1,7 @@
 #include "statefactory.h"
 
 #include "state.h"
+#include "statecleaning.h"
 #include "statedeploying.h"
 #include "stategeneratingbotversioncpp.h"
 #include "statemaking.h"
@@ -17,6 +18,8 @@ NBState *NBStateFactory::createState(NBStateManager::State state)
             return new NBStatePulling;
         case NBStateManager::GeneratingBotVersionCpp:
             return new NBStateGeneratingBotVersionCpp;
+        case NBStateManager::Cleaning:
+            return new NBStateCleaning;
         case NBStateManager::QMaking:
             return new NBStateQMaking;
         case NBStateManager::Making:

@@ -19,7 +19,8 @@ public:
     enum State {
         NonState,                  // State with nothing to do, it is usually the begining of the whole process.
         Pulling,                   // State with a running process "git pull" pulling the newest code from Github
-        GeneratingBotVersionCpp,   // State with a thread that generating bot_version.cpp changing the version of the whole program
+        GeneratingBotVersionCpp,   // State which generating bot_version.cpp changing the version of the generated program
+        Cleaning,                  // State which cleans the building dir
         QMaking,                   // State with a running process "qmake" generating Makefile
         Making,                    // State with a running process "make" building the whole project to a single runnable EXE
         Deploying,                 // State with a thread that copy files and folders so that computers without Qt can run it

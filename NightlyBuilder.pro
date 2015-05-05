@@ -28,7 +28,8 @@ SOURCES += \
     src/core/log.cpp \
     src/core/global.cpp \
     src/threads/deploythread.cpp \
-    src/threads/uploadthread.cpp
+    src/threads/uploadthread.cpp \
+    src/states/statecleaning.cpp
 
 HEADERS  += \
     src/dialogs/maindialog.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     src/core/log.h \
     src/core/global.h \
     src/threads/deploythread.h \
-    src/threads/uploadthread.h
+    src/threads/uploadthread.h \
+    src/states/statecleaning.h
 
 INCLUDEPATH += \
     src/states \
