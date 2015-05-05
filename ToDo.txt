@@ -3,8 +3,8 @@
         状态0420：已发布
     StateGeneratingBotVersionCpp：复制一份src/bot_version.cpb->src/bot_version.cpp，替换%date为当前日期
         状态0420：已发布
-    StateCleaningBuildPath：准备开线程清理编译文件夹
-        状态0421：下版本新增State，未着手
+    StateCleaning：准备开线程清理编译文件夹
+        状态0505：未开线程，直接主线程清理-->完成
     StateQMaking：启动QMake，注意使用ShadowBuild，文件夹名要包含日期，加入CONFIG+=buildbot
         状态0420：已发布
     StateMaking，启动make，make -f ./MakeFile.release
@@ -14,9 +14,9 @@
     StatePackage：启动7z，进行压缩。注意要把pull和编译日志压入文件。
         状态0420：已发布
     StateUploading：上传服务器。（暂时是相同电脑兼职制作FTP服务器，准备使用补助再弄一个服务器，要求是网络带宽大，至少10M）
-        状态0420：已发布，准备换用QNetworkAccessManager做FTP，不过由于是GPL协议所以用户名密码要开源……头疼ing
+        状态0505：已换用QNetworkAccessManager做FTP，不过由于是GPL协议所以用户名密码采用手工输入并记录如GlobalConfig的方式，防止从源码泄露
     StateDeletingOldPackage：如果服务器上的文件太多（每夜版超过15个压缩包）则进行删除处理。
-        状态0421：下版本新增State，未着手
+        状态0505：放弃
 
     全State：加入停止功能
         状态0420：已发布
@@ -41,8 +41,6 @@
 
 下版本设想：
 1、各State继续完善：
-    封装QProcess与继承QThread的处理，目前对QProcess和QThread的操作太多太复杂，而且都在各个State中占据了很大一部分篇幅，所以准备使用一个类来封装它。而且准备实现实时输出功能，包括到界面和到Log，将来或许可能到远端监控。
-        状态0423：放弃
     各个State的实时输出
         状态0423：0
     pull后无更新自动停止
