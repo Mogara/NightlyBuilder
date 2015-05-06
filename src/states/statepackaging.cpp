@@ -77,7 +77,15 @@ void NBStatePackaging::run()
     m_7z->setArguments(QStringList() << "a" << (projName + "-" + folderName + ".7z") << folderName);
 #elif defined(Q_OS_LINUX)
     m_7z->setProgram("tar");
-    m_7z->setArguments(QStringList() << "-czf" << (projName + "-" + folderName + ".tar.gz") << folderName);
+    m_7z->setArguments(QStringList() << "-czf" << (projName + "-" + folderName +
+#if defined(LINUX_X86)
+        "-x86"
+#elif defined(LINUX_X64)
+        "-x64"
+#else
+        "-xxx"
+#endif
+    + ".tar.gz") << folderName);
 #endif
 
     connect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStatePackaging::processFinished);

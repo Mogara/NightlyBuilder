@@ -17,7 +17,14 @@ NBFtpUpload::NBFtpUpload(QObject *parent) : QObject(parent)
 #if defined(Q_OS_WIN)
         ".7z"
 #elif defined(Q_OS_LINUX)
-        ".tar.gz"
+#if defined(LINUX_X86)
+        "-x86"
+#elif defined(LINUX_X64)
+        "-x64"
+#else
+        "-xxx"
+#endif
+        + ".tar.gz"
 #endif
     ;
     QString uploadUrl = GlobalConfig::FtpPath;
@@ -67,9 +74,16 @@ void NBUploadThread::run()
 
         QString fileName = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
 #if defined(Q_OS_WIN)
-                ".7z"
+            ".7z"
 #elif defined(Q_OS_LINUX)
-                ".tar.gz"
+#if defined(LINUX_X86)
+            "-x86"
+#elif defined(LINUX_X64)
+            "-x64"
+#else
+            "-xxx"
+#endif
+            + ".tar.gz"
 #endif
         ;
 
