@@ -72,8 +72,13 @@ void NBStatePackaging::run()
     QString projName = projDir.dirName();
 
     m_7z->setWorkingDirectory(dplyDir.absolutePath());
+#if defined(Q_OS_WIN)
     m_7z->setProgram("7z");
     m_7z->setArguments(QStringList() << "a" << (projName + "-" + folderName + ".7z") << folderName);
+#elif defined(Q_OS_LINUX)
+    m_7z->setProgram("tar");
+    m_7z->setArguments(QStringList() << "-czf" << (projName + "-" + folderName + ".tar.gz") << folderName);
+#endif
 
     connect(m_7z, (void (QProcess::*)(int, QProcess::ExitStatus))(&QProcess::finished), this, &NBStatePackaging::processFinished);
     connect(m_7z, (void (QProcess::*)(QProcess::ProcessError))(&QProcess::error), this, &NBStatePackaging::processError);

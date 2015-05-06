@@ -16,6 +16,7 @@ NBStateCleaning::~NBStateCleaning()
 
 void NBStateCleaning::run()
 {
+#ifndef QT_NO_DEBUG
     QDir d(GlobalConfig::BuildPath);
 
     if (!d.exists()) {
@@ -39,6 +40,7 @@ void NBStateCleaning::run()
 
 #undef DETECT_FAIL_RUN
 
+#endif
     emit finished();
 }
 
