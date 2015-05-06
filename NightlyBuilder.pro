@@ -55,4 +55,10 @@ INCLUDEPATH += \
     src/core \
     src/threads
 
-
+linux {
+    !contains(QMAKE_HOST.arch, "x86_64") {
+        DEFINES += LINUX_X86
+    } else {
+        DEFINES += LINUX_X64
+    }
+}

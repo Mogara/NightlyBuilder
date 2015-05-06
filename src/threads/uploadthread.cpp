@@ -13,7 +13,13 @@
 NBFtpUpload::NBFtpUpload(QObject *parent) : QObject(parent)
 {
     m_man = new QNetworkAccessManager(this);
-    QString filename = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") + ".7z";
+    QString filename = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
+#if defined(Q_OS_WIN)
+        ".7z"
+#elif defined(Q_OS_LINUX)
+        ".tar.gz"
+#endif
+    ;
     QString uploadUrl = GlobalConfig::FtpPath;
     if (!uploadUrl.endsWith("/"))
         uploadUrl.append("/");
@@ -59,7 +65,13 @@ void NBUploadThread::run()
         if (f.length() > 14)
             QFile::remove(f.first().absoluteFilePath());
 
-        QString fileName = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") + ".7z";
+        QString fileName = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
+#if defined(Q_OS_WIN)
+                ".7z"
+#elif defined(Q_OS_LINUX)
+                ".tar.gz"
+#endif
+        ;
 
         QDir dplyDir(GlobalConfig::DeployPath);
 
