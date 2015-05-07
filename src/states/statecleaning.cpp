@@ -16,7 +16,7 @@ NBStateCleaning::~NBStateCleaning()
 
 void NBStateCleaning::run()
 {
-#ifndef QT_NO_DEBUG
+#ifdef QT_NO_DEBUG
     QDir d(GlobalConfig::BuildPath);
 
     if (!d.exists()) {
