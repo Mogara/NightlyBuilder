@@ -100,7 +100,11 @@ void NBDeployThread::run()
     }
 
     QDir proj(GlobalConfig::ProjectPath);
+#if defined(Q_OS_WIN)
     QString dplyFilePath = proj.absoluteFilePath("bot.dply");
+#elif defined(Q_OS_LINUX)
+    QString dplyFilePath = proj.absoluteFilePath("bot.dplyLinux");
+#endif
 #ifdef USE_FSTREAM
     QFileInfo fileInfo(dplyFilePath);
     string std_path = QDir::toNativeSeparators(fileInfo.canonicalFilePath()).toStdString();
@@ -124,7 +128,7 @@ void NBDeployThread::run()
 
     QDir dply(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd"));
 
-    QStringList folderList, fileList, qtLibList, qtPlugList;
+    QStringList folderList, fileList, qtLibList, qtPlugList, nonQtLibList;
     QStringList *currentList = NULL;
 
     auto listGetter = [&](const QString &n) -> void {
@@ -136,6 +140,8 @@ void NBDeployThread::run()
             currentList = &qtLibList;
         else if (n == "Qt Plugins")
             currentList = &qtPlugList;
+        else if (n == "Non Qt Libraries")
+            currentList = &nonQtLibList;
         else
             currentList = NULL;
     };
@@ -163,6 +169,7 @@ void NBDeployThread::run()
     NBLog logFile;
     logFile.openLogFile("Deploy");
 
+#if defined(Q_OS_WIN)
     // Step 1: copy the exe file
     writeLog(logFile, "Step 1: copy the exe file:");
     QDir buld(GlobalConfig::BuildPath);
@@ -199,20 +206,10 @@ void NBDeployThread::run()
     ok = true;
 
     // Step 3: copy the files from ProjectPath to DeployPath
-    // reminder: there is some items that contains "->" substring in the folder list, so distinguish it
     writeLog(logFile, "Step 3: copy the files from ProjectPath to DeployPath:");
     foreach (const QString &f, fileList) {
-        QString oldFileName = f;
-        QString newFileName = f;
-        if (f.contains("->")) {
-            QStringList l = f.split("->");
-            oldFileName = l.first().trimmed();
-            newFileName = l.last().trimmed();
-        }
-
-        QString oldPath = proj.absoluteFilePath(oldFileName);
-        QString newPath = dply.absoluteFilePath(newFileName);
-
+        QString oldPath = proj.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
         ok &= QFile::copy(oldPath, newPath);
     }
 
@@ -269,6 +266,144 @@ void NBDeployThread::run()
         succeed = false;
 
     ok = true;
+
+#elif defined(Q_OS_LINUX)
+    // Step 1: copy the exe file
+    writeLog(logFile, "Step 1: copy the exe file:");
+    QDir buld(GlobalConfig::BuildPath);
+    if (QFile::exists(buld.absoluteFilePath("QSanguosha")))
+        ok &= QFile::copy(buld.absoluteFilePath("QSanguosha"), dply.absoluteFilePath("QSanguosha"));
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
+    // Step 2: copy the folders from ProjectPath to DeployPath
+    writeLog(logFile, "Step 2: copy the folders from ProjectPath to DeployPath:");
+    foreach (const QString &f, folderList) {
+        QString oldPath = proj.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        ok &= copyFolder(oldPath, newPath);
+    }
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
+    // Step 3: copy the files from ProjectPath to DeployPath
+    writeLog(logFile, "Step 3: copy the files from ProjectPath to DeployPath:");
+    foreach (const QString &f, fileList) {
+        QString oldPath = proj.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        ok &= QFile::copy(oldPath, newPath);
+    }
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
+    // Step 4: copy the libraries to DeployPath/lib/linux/xxx
+    writeLog(logFile, "Step 4: copy the libraries to DeployPath/lib/linux/xxx");
+    QDir projlib = proj;
+    ok &= projlib.cd("lib");
+    ok &= projlib.cd("linux");
+#if defined(LINUX_X86)
+    ok &= projlib.cd("x86");
+#elif defined(LINUX_X64)
+    ok &= projlib.cd("x64");
+#else
+    ok &= projlib.cd("xxx");
+#endif
+    dply.mkpath("lib/linux/"
+#if defined(LINUX_X86)
+            "x86"
+#elif defined(LINUX_X64)
+            "x64"
+#else
+            "xxx"
+#endif
+    );
+    QDir dplylib = dply;
+    ok &= dplylib.cd("lib");
+    ok &= dplylib.cd("linux");
+#if defined(LINUX_X86)
+    ok &= dplylib.cd("x86");
+#elif defined(LINUX_X64)
+    ok &= dplylib.cd("x64");
+#else
+    ok &= dplylib.cd("xxx");
+#endif
+
+    foreach (const QString &f, nonQtLibList) {
+        QString oldPath = projlib.absoluteFilePath(f);
+        QString newPath = dplylib.absoluteFilePath(f);
+        ok &= QFile::copy(oldPath, newPath);
+    }
+
+    QDir qt(GlobalConfig::QtPath);
+    ok &= qt.cd("lib");
+    foreach (const QString &f, qtLibList) {
+        QString oldPath = qt.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+
+        QFileInfo oldfileinfo(oldPath);
+        oldpath = oldfileinfo.canonicalFilePath();
+
+        ok &= QFile::copy(oldPath, newPath);
+    }
+
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
+    // Step 5: copy the Qt plugins to DeployPath
+    writeLog(logFile, "Step 5: copy the Qt plugins to DeployPath:");
+    qt = QDir(GlobalConfig::QtPath);
+    ok &= qt.cd("plugins");
+    foreach (const QString &f, qtPlugList) {
+        QString oldPath = qt.absoluteFilePath(f);
+        QString newPath = dply.absoluteFilePath(f);
+        ok &= copyFolder(oldPath, newPath);
+
+        QDir newDir(newPath);
+    }
+
+    if (ok)
+        writeLog(logFile, "ok\n");
+    else
+        writeLog(logFile, "ng\n");
+
+    if (!ok)
+        succeed = false;
+
+    ok = true;
+
+#endif
 
     logFile.closeLogFile();
 
