@@ -365,7 +365,7 @@ void NBDeployThread::run()
         QString newPath = dply.absoluteFilePath(f);
 
         QFileInfo oldfileinfo(oldPath);
-        oldpath = oldfileinfo.canonicalFilePath();
+        oldPath = oldfileinfo.canonicalFilePath();
 
         ok &= QFile::copy(oldPath, newPath);
     }
