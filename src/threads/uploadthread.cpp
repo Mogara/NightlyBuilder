@@ -91,8 +91,9 @@ void NBUploadThread::run()
 
         QFile::copy(dplyDir.absoluteFilePath(fileName), ftpDir.absoluteFilePath(fileName));
     } else {
-        NBFtpUpload *upload = new NBFtpUpload(this);
+        NBFtpUpload *upload = new NBFtpUpload;
         connect(upload, &NBFtpUpload::finished, this, &NBUploadThread::uploadFinished);
+        connect(upload, &NBFtpUpload::finished, upload, &NBFtpUpload::deleteLater)
         upload->start();
 
         exec();
