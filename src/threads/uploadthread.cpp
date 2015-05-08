@@ -93,7 +93,7 @@ void NBUploadThread::run()
     } else {
         NBFtpUpload *upload = new NBFtpUpload;
         connect(upload, &NBFtpUpload::finished, this, &NBUploadThread::uploadFinished);
-        connect(upload, &NBFtpUpload::finished, upload, &NBFtpUpload::deleteLater)
+        connect(upload, &NBFtpUpload::finished, upload, &NBFtpUpload::deleteLater);
         upload->start();
 
         exec();
