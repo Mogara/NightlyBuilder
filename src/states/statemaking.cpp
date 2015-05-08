@@ -82,6 +82,7 @@ void NBStateMaking::run()
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(1800000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateMaking::timeout);
+    m_waitTimer->start();
 
     m_make->start();
 }

@@ -65,8 +65,9 @@ void NBStateUploading::run()
     if (m_waitTimer == NULL)
         m_waitTimer = new QTimer;
     m_waitTimer->setSingleShot(true);
-    m_waitTimer->setInterval(60000);
+    m_waitTimer->setInterval(1800000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStateUploading::timeout);
+    m_waitTimer->start();
 
     m_upload->start();
 }

@@ -98,6 +98,7 @@ void NBStatePackaging::run()
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(1800000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStatePackaging::timeout);
+    m_waitTimer->start();
 
     m_7z->start();
 }

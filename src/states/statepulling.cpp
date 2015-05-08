@@ -78,6 +78,7 @@ void NBStatePulling::run()
     m_waitTimer->setSingleShot(true);
     m_waitTimer->setInterval(3600000);
     connect(m_waitTimer, &QTimer::timeout, this, &NBStatePulling::timeout);
+    m_waitTimer->start();
 
     m_git->start();
 }
