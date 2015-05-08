@@ -11,6 +11,8 @@ CONFIG += c++11
 TARGET = NightlyBuilder
 TEMPLATE = app
 
+DEFINES += USE_FSTREAM
+
 
 SOURCES += \
     src/main.cpp \

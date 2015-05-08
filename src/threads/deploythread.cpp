@@ -5,8 +5,6 @@
 #include <QDate>
 #include <QDir>
 
-#define USE_FSTREAM
-
 #ifdef USE_FSTREAM
 #include <fstream>
 #include <string>

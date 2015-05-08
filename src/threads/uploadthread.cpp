@@ -10,6 +10,14 @@
 #include <QUrl>
 #include <QNetworkReply>
 
+#ifdef USE_FSTREAM
+#include <fstream>
+using std::fstream;
+using std::string;
+using std::ios_base;
+#endif
+
+
 NBFtpUpload::NBFtpUpload(QObject *parent) : QObject(parent)
 {
     m_man = new QNetworkAccessManager(this);
@@ -47,11 +55,25 @@ NBFtpUpload::~NBFtpUpload()
 
 void NBFtpUpload::start()
 {
+#ifndef USE_FSTREAM
     QFile *f = new QFile(m_filePath, this);
     f->open(QIODevice::ReadOnly);
+#else
+    QFileInfo file(m_filePath);
+    string path = QDir::toNativeSeparators(file.canonicalFilePath()).toStdString();
+    fstream fs;
+    fs.open(path, ios_base::in | ios_base::binary);
 
+    fs.seekg(0, ios_base::end);
+    fstream::pos_type size = fs.tellg();
+    fs.seekg(0, ios_base::beg);
+
+    QByteArray f(size, 0);
+    fs.read(f.data(), size);
+#endif
     QNetworkReply *r = m_man->put(QNetworkRequest(*m_url), f);
     connect(r, &QNetworkReply::finished, this, &NBFtpUpload::finished);
+
 }
 
 NBUploadThread::NBUploadThread()
