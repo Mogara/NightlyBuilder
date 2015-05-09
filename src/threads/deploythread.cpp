@@ -360,7 +360,7 @@ void NBDeployThread::run()
     ok &= qt.cd("lib");
     foreach (const QString &f, qtLibList) {
         QString oldPath = qt.absoluteFilePath(f);
-        QString newPath = dply.absoluteFilePath(f);
+        QString newPath = dplylib.absoluteFilePath(f);
 
         QFileInfo oldfileinfo(oldPath);
         oldPath = oldfileinfo.canonicalFilePath();
