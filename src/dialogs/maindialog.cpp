@@ -29,6 +29,8 @@ NBMainDialog::NBMainDialog(QWidget *parent)
     addPathLine(tr("FTP Path"), m_ftpPathEdit, "FtpPath");
     addPathLine(tr("FTP Username"), m_ftpUserNameEdit, "FtpUserName", false);
     addPathLine(tr("Ftp Password"), m_ftpPasswordEdit, "FtpPassword", false);
+    m_ftpPasswordEdit->setContextMenuPolicy(Qt::NoContextMenu);
+    m_ftpPasswordEdit->setEchoMode(QLineEdit::Password);
 
     m_layout->addLayout(m_pathLineLayout);
 
