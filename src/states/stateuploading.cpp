@@ -1,5 +1,5 @@
 #include "stateuploading.h"
-#include "uploadthread.h"
+#include "upload.h"
 #include "global.h"
 
 #include <QTimer>
@@ -17,15 +17,10 @@ NBStateUploading::~NBStateUploading()
     }
 
     if (m_upload != NULL) {
-        disconnect(m_upload, &QThread::finished, this, 0);
-        if (m_upload->isRunning())
-            m_upload->terminate();
-        if (!m_upload->isRunning() || m_upload->wait()) {
-
-        } else
-            GlobalMethod::crash();
-
-        m_upload->deleteLater();
+        disconnect(m_upload, &NBUpload::stopped, this, 0);
+        disconnect(m_upload, &NBUpload::error, this, 0);
+        disconnect(m_upload, &NBUpload::finished, this, 0);
+        delete m_upload;
     }
 }
 
@@ -43,22 +38,17 @@ void NBStateUploading::run()
         m_waitTimer->stop();
 
     if (m_upload != NULL) {
-        disconnect(m_upload, &QThread::finished, this, 0);
-        if (m_upload->isRunning())
-            m_upload->terminate();
-        if (!m_upload->isRunning() || m_upload->wait()) {
-
-        } else {
-            emit fatal();
-            return;
-        }
+        disconnect(m_upload, &NBUpload::stopped, this, 0);
+        disconnect(m_upload, &NBUpload::error, this, 0);
+        disconnect(m_upload, &NBUpload::finished, this, 0);
         delete m_upload;
-        m_upload = NULL;
     }
 
-    m_upload = new NBUploadThread;
+    m_upload = new NBUpload;
 
-    connect(m_upload, &QThread::finished, this, &NBStateUploading::uploadFinished);
+    connect(m_upload, &NBUpload::finished, this, &NBStateUploading::uploadFinished);
+    connect(m_upload, &NBUpload::error, this, &NBStateUploading::uploadError);
+    connect(m_upload, &NBUpload::stopped, this, &NBStateUploading::uploadFinished);
 
     // start timer before the thread start
 
@@ -82,23 +72,8 @@ void NBStateUploading::shutUp()
         return;
     }
 
-    disconnect(m_upload, &QThread::finished, this, 0);
-    if (m_upload->isRunning())
-        m_upload->terminate();
-    if (!m_upload->isRunning() || m_upload->wait()) {
-
-    } else {
-    /*
-        m_isError = true;
-        emit fatal();
-        return;
-    */
-        // we ignore this error.
-    }
-    m_upload->deleteLater();
-    m_upload = NULL;
-
-    emit stopped();
+    m_stopping = true;
+    m_upload->stop();
 }
 
 void NBStateUploading::uploadFinished()
@@ -112,23 +87,55 @@ void NBStateUploading::uploadFinished()
     }
 
     m_running = false;
-    emit finished();
 
+    if (m_stopping)
+        emit stopped();
+    else
+        emit finished();
+
+    disconnect(m_upload, &NBUpload::stopped, this, 0);
+    disconnect(m_upload, &NBUpload::error, this, 0);
+    disconnect(m_upload, &NBUpload::finished, this, 0);
     m_upload->deleteLater();
     m_upload = NULL;
 }
 
 void NBStateUploading::timeout()
 {
-    //m_running = false;
+    m_running = false;
 
     if (m_upload == NULL) {
         // what the hell?
         return;
     }
 
-    if (m_upload->isRunning())
-        m_upload->terminate();
+    disconnect(m_upload, &NBUpload::stopped, this, 0);
+    disconnect(m_upload, &NBUpload::error, this, 0);
+    disconnect(m_upload, &NBUpload::finished, this, 0);
+    m_upload->stop();
 
     emit error();
+}
+
+void NBStateUploading::uploadError()
+{
+    if (m_waitTimer != NULL)
+        m_waitTimer->stop();
+
+    if (m_upload == NULL) {
+        // what the fuck??
+        return;
+    }
+
+    m_running = false;
+    if (m_stopping)
+        emit stopped();
+    else
+        emit error();
+
+    disconnect(m_upload, &NBUpload::stopped, this, 0);
+    disconnect(m_upload, &NBUpload::error, this, 0);
+    disconnect(m_upload, &NBUpload::finished, this, 0);
+    m_upload->deleteLater();
+    m_upload = NULL;
 }

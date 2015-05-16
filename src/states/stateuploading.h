@@ -3,7 +3,7 @@
 
 #include "state.h"
 
-class NBUploadThread;
+class NBUpload;
 class QTimer;
 
 class NBStateUploading : public NBState
@@ -18,12 +18,14 @@ public:
 
 public slots:
     void uploadFinished();
+    void uploadError();
     void timeout();
 
 private:
-    NBUploadThread *m_upload;
+    NBUpload *m_upload;
     QTimer *m_waitTimer;
     bool m_running;
+    bool m_stopping;
 };
 
 #endif // NBSTATEUPLOADING_H
