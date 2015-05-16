@@ -11,7 +11,7 @@ QString GlobalConfig::LogPath;
 QString GlobalConfig::FtpUserName = "anonymous";
 QString GlobalConfig::FtpPassword = "User@Mogara.org";
 
-GlobalConfig NBSetting;
+GlobalConfig *NBSettingPtr;
 
 GlobalConfig::GlobalConfig() : QSettings("MogaraNightlyBuilder", QSettings::IniFormat)
 {

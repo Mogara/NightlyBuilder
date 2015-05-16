@@ -27,7 +27,9 @@ namespace GlobalMethod
     void crash();
 }
 
-extern GlobalConfig NBSetting;
+extern GlobalConfig *NBSettingPtr;
+
+#define NBSetting (*NBSettingPtr)
 
 #endif // GLOBAL_H
 
