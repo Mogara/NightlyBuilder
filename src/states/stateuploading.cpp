@@ -33,6 +33,7 @@ void NBStateUploading::run()
     }
 
     m_running = true;
+    m_stopping = false;
 
     if (m_waitTimer != NULL)
         m_waitTimer->stop();
