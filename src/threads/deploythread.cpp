@@ -85,7 +85,7 @@ void NBDeployThread::run()
     // Step 0: delete the old files and folders.
     // This step isn't recorded into Log files, and we don't concern whether it succeeded or not.
 
-    QDir globalDply = GlobalConfig::DeployPath;
+    QDir globalDply = NBSettings::DeployPath;
     QStringList existingFileList = globalDply.entryList(QDir::Files);
     foreach (const QString &f, existingFileList)
         QFile::remove(globalDply.absoluteFilePath(f));
@@ -97,7 +97,7 @@ void NBDeployThread::run()
         to_delete.removeRecursively();
     }
 
-    QDir proj(GlobalConfig::ProjectPath);
+    QDir proj(NBSettings::ProjectPath);
 #if defined(Q_OS_WIN)
     QString dplyFilePath = proj.absoluteFilePath("bot.dply");
 #elif defined(Q_OS_LINUX)
@@ -116,7 +116,7 @@ void NBDeployThread::run()
         if (!dplyFile.open(QIODevice::ReadOnly | QIODevice::Text))
             throw 1;
 #endif
-        if (!proj.mkpath(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd")))
+        if (!proj.mkpath(NBSettings::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd")))
             throw 2;
     }
     catch (int) {
@@ -124,7 +124,7 @@ void NBDeployThread::run()
         return;
     }
 
-    QDir dply(GlobalConfig::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd"));
+    QDir dply(NBSettings::DeployPath + "/" + QDate::currentDate().toString("yyyyMMdd"));
 
     QStringList folderList, fileList, qtLibList, qtPlugList, nonQtLibList;
     QStringList *currentList = NULL;
@@ -170,7 +170,7 @@ void NBDeployThread::run()
 #if defined(Q_OS_WIN)
     // Step 1: copy the exe file
     writeLog(logFile, "Step 1: copy the exe file:");
-    QDir buld(GlobalConfig::BuildPath);
+    QDir buld(NBSettings::BuildPath);
     ok &= buld.cd("release");
     if (QFile::exists(buld.absoluteFilePath("QSanguosha.exe")))
         ok &= QFile::copy(buld.absoluteFilePath("QSanguosha.exe"), dply.absoluteFilePath("QSanguosha.exe"));
@@ -223,7 +223,7 @@ void NBDeployThread::run()
 
     // Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath
     writeLog(logFile, "Step 4: copy the Qt and MinGW(for this instance of bot)/VS libraries to DeployPath:");
-    QDir qt(GlobalConfig::QtPath);
+    QDir qt(NBSettings::QtPath);
     ok &= qt.cd("bin");
     foreach (const QString &f, qtLibList) {
         QString oldPath = qt.absoluteFilePath(f);
@@ -244,7 +244,7 @@ void NBDeployThread::run()
     // Step 5: copy the Qt plugins to DeployPath
     // reminder: Remove the debug version of plugins
     writeLog(logFile, "Step 5: copy the Qt plugins to DeployPath:");
-    qt = QDir(GlobalConfig::QtPath);
+    qt = QDir(NBSettings::QtPath);
     ok &= qt.cd("plugins");
     foreach (const QString &f, qtPlugList) {
         QString oldPath = qt.absoluteFilePath(f);
@@ -417,7 +417,7 @@ void NBDeployThread::run()
     if (toCopyLogs.isEmpty())
         toCopyLogs << "git-StdOut" << "git-StdErr" << "QMake-StdOut" << "QMake-StdErr" << "Make-StdOut" << "Make-StdErr" << "Deploy";
 
-    QDir logDir(GlobalConfig::LogPath);
+    QDir logDir(NBSettings::LogPath);
     foreach (const QString &logName, toCopyLogs) {
         QString filePath = logDir.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");
         QString toPath = logDirtoCopy.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");

@@ -1,4 +1,5 @@
 #include "maindialog.h"
+#include "statemanager.h"
 #include "global.h"
 #include <QApplication>
 #include <QSettings>
@@ -10,10 +11,10 @@ int main(int argc, char *argv[])
     QSettings::setPath(QSettings::IniFormat, QSettings::UserScope, a.applicationDirPath());
     QSettings::setPath(QSettings::IniFormat, QSettings::SystemScope, a.applicationDirPath());
 
-    NBSettingPtr = new GlobalConfig;
-    QObject::connect(&a, &QApplication::aboutToQuit, NBSettingPtr, &GlobalConfig::deleteLater);
+    NBSettingPtr = new NBSettings;
+    QObject::connect(&a, &QApplication::aboutToQuit, NBSettingPtr, &NBSettings::deleteLater);
 
-    NBSetting.init();
+    NBGlobal_Settings.init();
 
     NBMainDialog w;
     w.show();

@@ -49,7 +49,7 @@ void NBUpload::start()
 {
     m_succeed = true;
     m_running = true;
-    if (GlobalConfig::FtpPath.toLower().startsWith("ftp://")) {
+    if (NBSettings::FtpPath.toLower().startsWith("ftp://")) {
         m_isFtp = true;
         if (m_network != NULL) {
             if (m_currentReply != NULL) {
@@ -63,7 +63,7 @@ void NBUpload::start()
             m_network = new QNetworkAccessManager;
         }
 
-        QString filename = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
+        QString filename = QDir(NBSettings::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
 #if defined(Q_OS_WIN)
             ".7z"
 #elif defined(Q_OS_LINUX)
@@ -78,16 +78,16 @@ void NBUpload::start()
 #endif
         ;
 
-        QString uploadUrl = GlobalConfig::FtpPath;
+        QString uploadUrl = NBSettings::FtpPath;
         if (!uploadUrl.endsWith("/"))
             uploadUrl.append("/");
 
         uploadUrl.append(filename);
         m_url.setUrl(uploadUrl);
-        m_url.setUserName(GlobalConfig::FtpUserName);
-        m_url.setPassword(GlobalConfig::FtpPassword);
+        m_url.setUserName(NBSettings::FtpUserName);
+        m_url.setPassword(NBSettings::FtpPassword);
 
-        m_filePath = QDir(GlobalConfig::DeployPath).absoluteFilePath(filename);
+        m_filePath = QDir(NBSettings::DeployPath).absoluteFilePath(filename);
 
 #ifndef USE_FSTREAM
         QFile *f = new QFile(m_filePath, this);

@@ -4,10 +4,10 @@
 #include <QString>
 #include <QSettings>
 
-class GlobalConfig : public QSettings
+class NBSettings : public QSettings
 {
 public:
-    GlobalConfig();
+    NBSettings();
     void init();
 
     static QString ProjectPath;
@@ -27,9 +27,9 @@ namespace GlobalMethod
     void crash();
 }
 
-extern GlobalConfig *NBSettingPtr;
+extern NBSettings *NBSettingPtr;
 
-#define NBSetting (*NBSettingPtr)
+#define NBGlobal_Settings (*NBSettingPtr)
 
 #endif // GLOBAL_H
 

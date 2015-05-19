@@ -84,7 +84,7 @@ void NBMainDialog::addPathLine(const QString &name, QLineEdit *&edit, const QStr
     m_pathLineLayout->addRow(name, h);
 
     if (!settingsKey.isEmpty())
-        edit->setText(NBSetting.value(settingsKey).toString());
+        edit->setText(NBGlobal_Settings.value(settingsKey).toString());
 }
 
 void NBMainDialog::showFileDialog()
@@ -100,16 +100,16 @@ void NBMainDialog::showFileDialog()
 
 void NBMainDialog::saveSettings()
 {
-    GlobalConfig::ProjectPath = m_projectPathEdit->text();
-    GlobalConfig::BuildPath = m_buildPathEdit->text();
-    GlobalConfig::QtPath = m_qtPathEdit->text();
-    GlobalConfig::DeployPath = m_deployPathEdit->text();
-    GlobalConfig::FtpPath = m_ftpPathEdit->text();
-    GlobalConfig::LogPath = m_logPathEdit->text();
-    GlobalConfig::FtpUserName = m_ftpUserNameEdit->text();
-    GlobalConfig::FtpPassword = m_ftpPasswordEdit->text();
+    NBSettings::ProjectPath = m_projectPathEdit->text();
+    NBSettings::BuildPath = m_buildPathEdit->text();
+    NBSettings::QtPath = m_qtPathEdit->text();
+    NBSettings::DeployPath = m_deployPathEdit->text();
+    NBSettings::FtpPath = m_ftpPathEdit->text();
+    NBSettings::LogPath = m_logPathEdit->text();
+    NBSettings::FtpUserName = m_ftpUserNameEdit->text();
+    NBSettings::FtpPassword = m_ftpPasswordEdit->text();
 
-#define SAVE_TO_CONFIG(name) NBSetting.setValue(#name, GlobalConfig::name)
+#define SAVE_TO_CONFIG(name) NBGlobal_Settings.setValue(#name, NBSettings::name)
     SAVE_TO_CONFIG(ProjectPath);
     SAVE_TO_CONFIG(BuildPath);
     SAVE_TO_CONFIG(QtPath);

@@ -47,9 +47,9 @@ bool NBLog::openLogFile(const QString &logName)
     if (m_logFile != NULL)
         closeLogFile();
 
-    QDir d(GlobalConfig::LogPath);
+    QDir d(NBSettings::LogPath);
     if (!d.exists())
-        d.mkpath(GlobalConfig::LogPath);
+        d.mkpath(NBSettings::LogPath);
 
     QString fileName = d.absoluteFilePath(logName + QDate::currentDate().toString("yyyyMMdd") + ".log");
 

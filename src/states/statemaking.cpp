@@ -63,7 +63,7 @@ void NBStateMaking::run()
     }
 
     m_make = new QProcess;
-    m_make->setWorkingDirectory(GlobalConfig::BuildPath);
+    m_make->setWorkingDirectory(NBSettings::BuildPath);
 #if defined(Q_OS_WIN)
     m_make->setProgram("mingw32-make"); // consider using GlobalConfig instead
     m_make->setArguments(QStringList() << "-fMakefile.Release");

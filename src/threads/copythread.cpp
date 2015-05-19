@@ -18,9 +18,9 @@ NBCopyThread::~NBCopyThread()
 void NBCopyThread::run()
 {
     succeed = false;
-    QDir ftpDir(GlobalConfig::FtpPath);
+    QDir ftpDir(NBSettings::FtpPath);
 
-    QString fileName = QDir(GlobalConfig::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
+    QString fileName = QDir(NBSettings::ProjectPath).dirName() + "-" + QDate::currentDate().toString("yyyyMMdd") +
 #if defined(Q_OS_WIN)
         ".7z"
 #elif defined(Q_OS_LINUX)
@@ -35,7 +35,7 @@ void NBCopyThread::run()
 #endif
     ;
 
-    QDir dplyDir(GlobalConfig::DeployPath);
+    QDir dplyDir(NBSettings::DeployPath);
 
     if (!QFile::copy(dplyDir.absoluteFilePath(fileName), ftpDir.absoluteFilePath(fileName)))
         succeed = false;

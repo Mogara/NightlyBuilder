@@ -18,7 +18,7 @@ NBStateGeneratingBotVersionCpp::~NBStateGeneratingBotVersionCpp()
 
 void NBStateGeneratingBotVersionCpp::run()
 {
-    QDir d(GlobalConfig::ProjectPath);
+    QDir d(NBSettings::ProjectPath);
 
     if (!d.exists()) {
         emit fatal();

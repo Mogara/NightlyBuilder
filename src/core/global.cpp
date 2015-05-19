@@ -2,23 +2,23 @@
 
 #include <QMessageBox>
 
-QString GlobalConfig::ProjectPath;
-QString GlobalConfig::BuildPath;
-QString GlobalConfig::QtPath;
-QString GlobalConfig::DeployPath;
-QString GlobalConfig::FtpPath;
-QString GlobalConfig::LogPath;
-QString GlobalConfig::FtpUserName = "anonymous";
-QString GlobalConfig::FtpPassword = "User@Mogara.org";
+QString NBSettings::ProjectPath;
+QString NBSettings::BuildPath;
+QString NBSettings::QtPath;
+QString NBSettings::DeployPath;
+QString NBSettings::FtpPath;
+QString NBSettings::LogPath;
+QString NBSettings::FtpUserName = "anonymous";
+QString NBSettings::FtpPassword = "User@Mogara.org";
 
-GlobalConfig *NBSettingPtr;
+NBSettings *NBSettingPtr;
 
-GlobalConfig::GlobalConfig() : QSettings("MogaraNightlyBuilder", QSettings::IniFormat)
+NBSettings::NBSettings() : QSettings("MogaraNightlyBuilder", QSettings::IniFormat)
 {
 
 }
 
-void GlobalConfig::init()
+void NBSettings::init()
 {
 #define LOAD_STRING_SETTING(name) name = value(#name).toString()
 

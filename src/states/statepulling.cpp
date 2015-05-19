@@ -64,7 +64,7 @@ void NBStatePulling::run()
     }
 
     m_git = new QProcess;
-    m_git->setWorkingDirectory(GlobalConfig::ProjectPath);
+    m_git->setWorkingDirectory(NBSettings::ProjectPath);
     m_git->setProgram("git");
     m_git->setArguments(QStringList() << "pull");
 

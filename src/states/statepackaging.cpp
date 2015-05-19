@@ -65,10 +65,10 @@ void NBStatePackaging::run()
 
     m_7z = new QProcess;
 
-    QDir dplyDir(GlobalConfig::DeployPath);
+    QDir dplyDir(NBSettings::DeployPath);
     QString folderName = QDate::currentDate().toString("yyyyMMdd");
 
-    QDir projDir(GlobalConfig::ProjectPath);
+    QDir projDir(NBSettings::ProjectPath);
     QString projName = projDir.dirName();
 
     m_7z->setWorkingDirectory(dplyDir.absolutePath());
