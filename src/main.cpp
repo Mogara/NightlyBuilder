@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
 
     NBGlobal_Settings.init();
 
+    NBStateManagerPtr = new NBStateManager;
+    QObject::connect(&a, &QApplication::aboutToQuit, NBStateManagerPtr, &NBStateManager::deleteLater);
+
     NBMainDialog w;
     w.show();
 

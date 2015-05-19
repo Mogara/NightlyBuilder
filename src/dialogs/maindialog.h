@@ -54,9 +54,9 @@ private slots:
 
 private:
     QTimer *m_t;
-    NBStateManager *m_nbsm;
 
     bool m_stopping;
+    bool m_running;
     QLabel *m_stateLbl;
 
     int m_compileCountdown;

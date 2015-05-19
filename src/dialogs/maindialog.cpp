@@ -1,6 +1,6 @@
 #include "maindialog.h"
 #include "global.h"
-//#include "statemanager.h"
+#include "statemanager.h"
 
 #include <QFileDialog>
 #include <QLabel>
@@ -17,7 +17,7 @@ namespace {
 }
 
 NBMainDialog::NBMainDialog(QWidget *parent)
-    : QDialog(parent), m_t(NULL), m_nbsm(NULL), m_stopping(false), m_compileCountdown(0)
+    : QDialog(parent), m_t(NULL), m_stopping(false), m_running(false), m_compileCountdown(0)
 {
     m_layout =  new QVBoxLayout;
     m_pathLineLayout = new QFormLayout;
@@ -58,7 +58,7 @@ NBMainDialog::~NBMainDialog()
 
 void NBMainDialog::closeEvent(QCloseEvent *e)
 {
-    if (m_nbsm != NULL) {
+    if (m_running) {
         e->ignore();
         return;
     }
@@ -124,7 +124,7 @@ void NBMainDialog::saveSettings()
 
 void NBMainDialog::startOrStopRunning()
 {
-    if (m_nbsm != NULL) { // running
+    if (m_running) {
         if (m_stopping)
             return;
 
@@ -133,13 +133,15 @@ void NBMainDialog::startOrStopRunning()
 
         m_stopping = true;
 
-        disconnect(m_nbsm, &NBStateManager::finished, this, 0);
-        disconnect(m_nbsm, &NBStateManager::error, this, 0);
+        disconnect(&NBGlobal_StateManager, &NBStateManager::finished, this, 0);
+        disconnect(&NBGlobal_StateManager, &NBStateManager::error, this, 0);
+        disconnect(&NBGlobal_StateManager, &NBStateManager::state_changed, this, 0);
 
-        m_nbsm->stop();
+        NBGlobal_StateManager.stop();
         // the rest part of this function is in NBMainDialog::runStopped()
     } else { // not running
         m_stopping = false;
+        m_running = true;
 
         foreach (QPushButton *btn, m_buttonEditPairs.keys())
             btn->setEnabled(false);
@@ -152,11 +154,10 @@ void NBMainDialog::startOrStopRunning()
 
         saveSettings(); // we should ask for save the changes instead of invoke this method automaticially.
 
-        m_nbsm = new NBStateManager;
-        connect(m_nbsm, &NBStateManager::finished, this, &NBMainDialog::runFinishedOnce);
-        connect(m_nbsm, &NBStateManager::error, this, &NBMainDialog::runError);
-        connect(m_nbsm, &NBStateManager::stopped, this, &NBMainDialog::runStopped);
-        connect(m_nbsm, &NBStateManager::state_changed, this, &NBMainDialog::stateChanged);
+        connect(&NBGlobal_StateManager, &NBStateManager::finished, this, &NBMainDialog::runFinishedOnce);
+        connect(&NBGlobal_StateManager, &NBStateManager::error, this, &NBMainDialog::runError);
+        connect(&NBGlobal_StateManager, &NBStateManager::stopped, this, &NBMainDialog::runStopped);
+        connect(&NBGlobal_StateManager, &NBStateManager::state_changed, this, &NBMainDialog::stateChanged);
 
         m_runBtn->setText(tr("Stop!"));
 
@@ -171,11 +172,9 @@ void NBMainDialog::runStopped()
         GlobalMethod::crash();
     }
 
-    disconnect(m_nbsm, &NBStateManager::stopped, this, &NBMainDialog::runStopped);
+    disconnect(&NBGlobal_StateManager, &NBStateManager::stopped, this, &NBMainDialog::runStopped);
     m_stopping = false;
-
-    m_nbsm->deleteLater();
-    m_nbsm = NULL;
+    m_running = false;
 
     m_runBtn->setText(tr("Run"));
 
@@ -190,12 +189,7 @@ void NBMainDialog::runStopped()
 
 void NBMainDialog::startCompiling()
 {
-    if (m_nbsm == NULL) {
-        // what the hell?? Don't need to explain, Crash.
-        GlobalMethod::crash();
-    }
-
-    m_nbsm->start();
+    NBGlobal_StateManager.start();
     timeStartCompile = QDateTime::currentDateTime();
 }
 

@@ -35,6 +35,7 @@ const QMap<NBStateManager::State, QString> NBStateManager::m_stateOutput3Logfile
     std::pair<NBStateManager::State, QString>(NBStateManager::Uploading               , ""),
 };
 
+NBStateManager *NBStateManagerPtr;
 
 NBStateManager::State operator++(NBStateManager::State &arg)
 {

@@ -60,6 +60,10 @@ private:
     void setCurrentState(State s);
 };
 
+extern NBStateManager *NBStateManagerPtr;
+
+#define NBGlobal_StateManager (*NBStateManagerPtr)
+
 NBStateManager::State operator++(NBStateManager::State &arg);
 
 NBStateManager::State operator++(NBStateManager::State &arg, int);
