@@ -6,9 +6,6 @@
 #include <QDate>
 
 NBLog::NBLog(QObject *parent) : QObject(parent), m_opened(false), m_logFile(NULL)
-#ifdef NBLOG_THREAD_SUPPORT
-  , m_logThread(NULL)
-#endif
 {
 
 }
