@@ -1,8 +1,6 @@
 #ifndef NBLOG_H
 #define NBLOG_H
 
-//#define NBLOG_THREAD_SUPPORT
-
 #include <QObject>
 
 class QIODevice;
