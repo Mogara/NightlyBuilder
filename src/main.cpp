@@ -22,5 +22,11 @@ int main(int argc, char *argv[])
     NBMainDialog w;
     w.show();
 
+    // NBLog l;
+    // Q_UNUSED(l);
+
+    // NBNetworkLogReceiver nlr;
+    // nlr.listen();
+
     return a.exec();
 }

@@ -61,6 +61,8 @@ private:
 
     int m_compileCountdown;
 
+    //NBRemoteControl *m_rc;
+
 protected:
     void closeEvent(QCloseEvent *);
 };
