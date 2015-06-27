@@ -268,7 +268,7 @@ void NBDeployThread::run()
 #elif defined(Q_OS_LINUX)
     // Step 1: copy the exe file
     writeLog(logFile, "Step 1: copy the exe file:");
-    QDir buld(GlobalConfig::BuildPath);
+    QDir buld(NBSettings::BuildPath);
     if (QFile::exists(buld.absoluteFilePath("QSanguosha")))
         ok &= QFile::copy(buld.absoluteFilePath("QSanguosha"), dply.absoluteFilePath("QSanguosha"));
 
@@ -356,7 +356,7 @@ void NBDeployThread::run()
         ok &= QFile::copy(oldPath, newPath);
     }
 
-    QDir qt(GlobalConfig::QtPath);
+    QDir qt(NBSettings::QtPath);
     ok &= qt.cd("lib");
     foreach (const QString &f, qtLibList) {
         QString oldPath = qt.absoluteFilePath(f);
@@ -381,7 +381,7 @@ void NBDeployThread::run()
 
     // Step 5: copy the Qt plugins to DeployPath
     writeLog(logFile, "Step 5: copy the Qt plugins to DeployPath:");
-    qt = QDir(GlobalConfig::QtPath);
+    qt = QDir(NBSettings::QtPath);
     ok &= qt.cd("plugins");
     foreach (const QString &f, qtPlugList) {
         QString oldPath = qt.absoluteFilePath(f);
