@@ -17,7 +17,7 @@ NBStateCleaning::~NBStateCleaning()
 void NBStateCleaning::run()
 {
 #ifdef QT_NO_DEBUG
-    QDir d(GlobalConfig::BuildPath);
+    QDir d(NBSettings::BuildPath);
 
     if (!d.exists()) {
         emit finished();
@@ -36,7 +36,7 @@ void NBStateCleaning::run()
 
     DETECT_FAIL_RUN(d_up.cdUp());
     DETECT_FAIL_RUN(d.removeRecursively());
-    DETECT_FAIL_RUN(d_up.mkpath(GlobalConfig::BuildPath));
+    DETECT_FAIL_RUN(d_up.mkpath(NBSettings::BuildPath));
 
 #undef DETECT_FAIL_RUN
 
